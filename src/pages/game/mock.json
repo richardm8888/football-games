@@ -1,0 +1,44 @@
+{
+    "GameData": [
+        {
+            "category": "Brighton and Hove Albion Football Club",
+            "words": [
+                "Shane Duffy",
+                "James Milner",
+                "Moisés Caicedo",
+                "Martín Montoya"
+            ],
+            "difficulty": 1
+        },
+        {
+            "category": "Fulham Football Club",
+            "words": [
+                "Mark Schwarzer",
+                "Ola Aina",
+                "Daniel James",
+                "Maarten Stekelenburg"
+            ],
+            "difficulty": 2
+        },
+        {
+            "category": "Manchester City Football Club",
+            "words": [
+                "Joe Hart",
+                "Fabian Delph",
+                "Ferran Torres",
+                "John Stones"
+            ],
+            "difficulty": 3
+        },
+        {
+            "category": "Futbol Club Barcelona",
+            "words": [
+                "Munir El Haddadi",
+                "Gerard Deulofeu",
+                "Denis Suárez",
+                "Marcos Alonso"
+            ],
+            "difficulty": 4
+        }
+    ]
+}
