@@ -18,9 +18,7 @@ export default function ({ children }: { children?: React.ReactElement }) {
 
     return (
         <Provider difficulty={params?.difficulty ?? ''}>
-            <h2>Game</h2>
-
-            <Grid />
+            <Grid difficulty={params?.difficulty ?? ''} />
         </Provider>
     );
 }
