@@ -1,6 +1,6 @@
 {
     "functions": {
-      "api/game.js": {
+      "api/game.ts": {
         "memory": 1024,
         "maxDuration": 10
       }
