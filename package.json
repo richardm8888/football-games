@@ -17,6 +17,7 @@
     "@types/node": "^16.18.75",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
+    "@types/ua-parser-js": "^0.7.39",
     "graphql": "^16.8.1",
     "neo4j-driver": "^5.17.0",
     "react": "^18.2.0",
@@ -25,6 +26,7 @@
     "react-router-dom": "^6.21.3",
     "react-scripts": "^5.0.1",
     "typescript": "^4.9.5",
+    "ua-parser-js": "^1.0.37",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

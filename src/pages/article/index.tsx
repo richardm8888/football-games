@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from '@apollo/client';
 import Markdown from 'react-markdown'
 
+import Typography from '@mui/material/Typography';
+
 import { getArticle } from '../../queries/blog';
 
 export default function ({ children }: { children?: React.ReactElement }) {
@@ -29,10 +31,12 @@ export default function ({ children }: { children?: React.ReactElement }) {
     }
 
     return (
-        <>
-            <h2>{data.article.title}</h2>
+        <div
+            style={{ padding: 16 }}
+        >
+            <Typography variant="h4">{data.article.title}</Typography>
 
             <Markdown>{data.article.content.markdown}</Markdown>
-        </>
+        </div>
     );
 }

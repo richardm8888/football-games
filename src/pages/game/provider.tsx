@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import mock from './mock.json';
-
 export const GameContext = React.createContext<any[]>([]);
 
 export default function ({ difficulty, children }: { difficulty: string, children?: React.ReactElement | React.ReactElement[] }) {
@@ -23,6 +21,8 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                 }
             );
     }, [difficulty]);
+
+    if (gameData.length === 0) return null;
 
     return (
         <GameContext.Provider value={gameData}>

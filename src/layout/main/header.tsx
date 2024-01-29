@@ -4,8 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
+import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';  
@@ -54,10 +53,13 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <Typography onClick={() => navigate('/')} variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     Football Connect
                 </Typography>
-                {actionButton}
+                <div style={{ display: 'flex', gap: '16px'}}>
+                    {location.pathname !== '/rules' && <Button variant="contained" color="secondary" onClick={() => navigate('/rules')}>Rules</Button>}
+                    {actionButton}
+                </div>
             </Toolbar>
         </AppBar>
     );

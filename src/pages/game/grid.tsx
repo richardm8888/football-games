@@ -23,6 +23,9 @@ import { GameContext } from './provider';
 import { saveGuesses, getGuesses, saveCorrectGuesses, getCorrectGuesses } from './helpers';
 import type { CorrectGuess } from './helpers';
 
+import SuccessModal from '../../components/SuccessModal';
+import FailModal from '../../components/FailModal';
+
 const GameGridBox = styled(animated(Paper))`
     justify-content: center;
     align-items: center;
@@ -58,10 +61,16 @@ const CorrectGuessContainer = styled(Container)<{color: string}>`
 `;
 
 export default function ({ difficulty, children }: { difficulty: string, children?: React.ReactElement }) {
+    const colors = ['#f9df6d', '#a0c35a', '#b0c4ef', '#ba81c5'];
+
     const GameData = React.useContext(GameContext);
+    const [failure, setFailure] = React.useState<boolean>(false);
+    const [successOpen, setSuccessOpen] = React.useState<boolean>(false);
+    const [failureOpen, setFailureOpen] = React.useState<boolean>(false);
     const [wrongGuess, setWrongGuess] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
     const [guesses, setGuesses] = React.useState<string[]>(getGuesses(difficulty));
+    const [incorrectGuesses, setIncorrectGuesses] = React.useState<string[]>(getGuesses(difficulty));
     const [gameState, setGameState] = React.useState<string[]>([]);
     const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
     const [correctGuesses, setCorrectGuesses] = React.useState<CorrectGuess[]>(getCorrectGuesses(difficulty));
@@ -93,12 +102,18 @@ export default function ({ difficulty, children }: { difficulty: string, childre
     };
 
     React.useEffect(() => {
-        const guessedGroups = correctGuesses.map((guess) => guess.name).flat();
-        
-        setGameState(shuffleArray(GameData.filter(group => !guessedGroups.includes(group.category)).map((group: any) => {
-            return group.words;
-        }).flat()));
-    }, [GameData]);
+        if (incorrectGuesses.length == 5) {
+            setFailureOpen(true);
+            setGameState([]);
+            setFailure(true);
+        } else {
+            const guessedGroups = correctGuesses.map((guess) => guess.name).flat();
+            
+            setGameState(shuffleArray(GameData.filter(group => !guessedGroups.includes(group.category)).map((group: any) => {
+                return group.words;
+            }).flat()));
+        }
+    }, [GameData, incorrectGuesses]);
 
     React.useEffect(() => {
         if (correctGuesses.length === 4) {
@@ -107,7 +122,7 @@ export default function ({ difficulty, children }: { difficulty: string, childre
     }, [gameState]);
 
     const alreadyGuessed = (items: string[]) => {
-        if (guesses.includes(items.sort().join(','))) {
+        if (incorrectGuesses.includes(items.sort().join(','))) {
             return true;
         } else {
             return false;
@@ -145,9 +160,10 @@ export default function ({ difficulty, children }: { difficulty: string, childre
     }
 
     const checkGuess = () => {
+        setGuesses([...guesses, selectedItems.sort().join(',')]);
+
         for(let category in GameData) {
             if (selectedItems.sort().join(',') === GameData[category].words.sort().join(',')) {
-                const colors = ['#f9df6d', '#a0c35a', '#b0c4ef', '#ba81c5'];
                 setGameState(gameState.filter((item) => !selectedItems.includes(item)));
                 setSelectedItems([]);
 
@@ -165,14 +181,20 @@ export default function ({ difficulty, children }: { difficulty: string, childre
             }
         }
 
-        const newGuesses = [...guesses, selectedItems.sort().join(',')];
-        saveGuesses(difficulty, newGuesses,)
-        setGuesses(newGuesses);
+        const newIncorrectGuesses = [...incorrectGuesses, selectedItems.sort().join(',')];
+        saveGuesses(difficulty, newIncorrectGuesses,)
+        setIncorrectGuesses(newIncorrectGuesses);
         setWrongGuess(true);
         setTimeout(() => {
             setWrongGuess(false);
         }, 1000);
     }
+
+    React.useEffect(() => {
+        if (correctGuesses.length == 4) {
+            setSuccessOpen(true);
+        }
+    }, [correctGuesses]);
 
     React.useEffect(() => {
         if (wrongGuess) {
@@ -209,6 +231,8 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                 boxSizing: 'border-box'
             }}
         >
+            <SuccessModal difficulty={difficulty} open={successOpen} setOpen={setSuccessOpen} gameData={GameData} guesses={guesses} />
+            <FailModal difficulty={difficulty} open={failureOpen} setOpen={setFailureOpen} gameData={GameData} guesses={guesses} />
             <Container 
                 sx={{ 
                     display: 'flex',
@@ -221,40 +245,58 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                     gap: 1
                 }}
             >
-                {correctGuesses.map((guess) => {
-                    return (
-                        <CorrectGuessContainer 
-                            color={guess.color}
-                        >
-                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{guess.name}</Typography>
-                            <Typography variant="body2">{guess.items.join(', ')}</Typography>
-                        </CorrectGuessContainer>
-                    )
-                })}
-                
-                <ToggleButtonGroup
-                    value={selectedItems}
-                    onChange={handleSelected}
-                    sx={{ 
-                        flexWrap: "wrap",
-                        gap: '8px 2%'
-                    }}
-                >
-                    {gameState.map((value, index) => {
-                        let animation = {};
-                        if (selectedItems.includes(value)) {
-                            const guessAnimationProps = [guessOneAnimationProps, guessTwoAnimationProps, guessThreeAnimationProps, guessFourAnimationProps][selectedItems.indexOf(value)];
-                            animation = wrongGuess ? shakeProps : guessAnimationProps;
-                        }
+                {failure ? (
+                    <>
+                    {GameData.map((group: any, index: number) => {
                         return (
-                            <GameGridBox style={animation}>
-                                <GameButton value={value} aria-label={value} >
-                                    {value}
-                                </GameButton>
-                            </GameGridBox>
-                        )
+                            <CorrectGuessContainer 
+                                color={colors[index]}
+                            >
+                                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{group.category}</Typography>
+                                <Typography variant="body2">{group.words.join(', ')}</Typography>
+                            </CorrectGuessContainer>
+                        );
                     })}
-                </ToggleButtonGroup>
+                    </>
+                ): (
+                    <>
+                        {correctGuesses.map((guess) => {
+                            return (
+                                <CorrectGuessContainer 
+                                    color={guess.color}
+                                >
+                                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{guess.name}</Typography>
+                                    <Typography variant="body2">{guess.items.join(', ')}</Typography>
+                                </CorrectGuessContainer>
+                            )
+                        })}
+                        
+                        <ToggleButtonGroup
+                            value={selectedItems}
+                            onChange={handleSelected}
+                            sx={{ 
+                                flexWrap: "wrap",
+                                gap: '8px 2%'
+                            }}
+                        >
+                            {gameState.map((value, index) => {
+                                let animation = {};
+                                if (selectedItems.includes(value)) {
+                                    const guessAnimationProps = [guessOneAnimationProps, guessTwoAnimationProps, guessThreeAnimationProps, guessFourAnimationProps][selectedItems.indexOf(value)];
+                                    animation = wrongGuess ? shakeProps : guessAnimationProps;
+                                }
+                                return (
+                                    <GameGridBox style={animation}>
+                                        <GameButton value={value} aria-label={value} >
+                                            {value}
+                                        </GameButton>
+                                    </GameGridBox>
+                                )
+                            })}
+                        </ToggleButtonGroup>
+                    </>
+                )}
+                
             </Container>
 
             <Container 
@@ -269,7 +311,7 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                 }}
             >
                 <Typography variant="body2">Mistakes remaining:</Typography>
-                {Array(5 - guesses.length).fill(0).map(() => <SportsSoccerIcon />)}
+                {Array(5 - incorrectGuesses.length).fill(0).map(() => <SportsSoccerIcon />)}
             </Container>
 
             <Container 
@@ -294,33 +336,37 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                     onClose={() => setMessage('')}
                 />
 
-                <Button
-                    startIcon={<ShuffleIcon />}
-                    onClick={() => {
-                        setGameState(shuffleArray(gameState));
-                    }} 
-                    variant="outlined"
-                >
-                    Shuffle
-                </Button>
+                {!failure && (
+                    <>
+                        <Button
+                            startIcon={<ShuffleIcon />}
+                            onClick={() => {
+                                setGameState(shuffleArray(gameState));
+                            }} 
+                            variant="outlined"
+                        >
+                            Shuffle
+                        </Button>
 
-                <Button
-                    startIcon={<UndoIcon />}
-                    onClick={() => {
-                        setSelectedItems([]);
-                    }} 
-                    variant="outlined"
-                >
-                    Deselect all
-                </Button>
+                        <Button
+                            startIcon={<UndoIcon />}
+                            onClick={() => {
+                                setSelectedItems([]);
+                            }} 
+                            variant="outlined"
+                        >
+                            Deselect all
+                        </Button>
 
-                <Button 
-                    startIcon={<PlayArrowIcon />}
-                    onClick={makeGuess} 
-                    variant="contained"
-                >
-                    Submit
-                </Button>
+                        <Button 
+                            startIcon={<PlayArrowIcon />}
+                            onClick={makeGuess} 
+                            variant="contained"
+                        >
+                            Submit
+                        </Button>
+                    </>
+                )}
             </Container>
         </div>
     );
