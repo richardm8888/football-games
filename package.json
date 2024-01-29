@@ -2,6 +2,7 @@
   "name": "football-games",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@apollo/client": "^3.8.10",
     "@emotion/react": "^11.11.3",

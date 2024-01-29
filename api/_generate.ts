@@ -37,7 +37,7 @@ async function getYesterdaysGame() {
 }
 
 
-async function getGame(difficulty = 'easy') {
+async function getGame(difficulty: string = 'easy') {
     const { records, summary, keys } = await driver.executeQuery(
         `
         MATCH (g:Game:${difficulty.toUpperCase()} {date: date()})
@@ -53,7 +53,7 @@ async function getGame(difficulty = 'easy') {
     }
 }
 
-async function saveGame(difficulty: string, gameData, clubIds: number[], playerIds: number[]) {
+async function saveGame(difficulty: string, gameData: any, clubIds: number[], playerIds: number[]) {
     const { records, summary, keys } = await driver.executeQuery(
         `
         CREATE (g:Game:${difficulty.toUpperCase()} {date: date(), game_data: $gameData})
@@ -73,7 +73,7 @@ async function saveGame(difficulty: string, gameData, clubIds: number[], playerI
 
 
 
-export default async function handler(request) {
+export default async function handler(request: any): Promise<any[]> {
     const difficulty = request.query['difficulty'] ?? 'easy';
     const cached = await getGame(difficulty);
 
@@ -85,17 +85,17 @@ export default async function handler(request) {
         let excludedPlayers: any[] =ydayGame.players ?? [];
         let includedClubs: any[] = getGameClubs(difficulty);
 
-        let allSelectedPlayers = {};
-        let game = {};
+        let allSelectedPlayers: any = {};
+        let game: any = {};
         const clubs = await getClubs(includedClubs, excludedClubs);
-        let allClubIds = clubs.map(club => club.clubId);
-        let clubIndex = 1;
+        let allClubIds: number[] = clubs.map((club: any) => club.clubId);
+        let clubIndex: number = 1;
         for(let club in clubs) {
             const clubId = clubs[club].clubId;
             const clubName = clubs[club].clubName;
             game[clubName] = [];
             for (let i = 0; i < 4; i++) {
-                let allExcludedPlayers = Object.keys(allSelectedPlayers).map(playerId => parseInt(playerId)).concat(excludedPlayers);
+                let allExcludedPlayers = Object.keys(allSelectedPlayers).map((playerId: string) => parseInt(playerId)).concat(excludedPlayers);
                 let excludedClubs: any[] = [];
                 let minClubs = 2;
                 let maxClubs = 10;
@@ -109,16 +109,16 @@ export default async function handler(request) {
                 }
                 const players = await lookupPlayerByClub(clubId, allExcludedPlayers, excludedClubs, minClubs, maxClubs, minApps, includedClubs);
                 const player = players[0];
-                allSelectedPlayers[player.get('p').properties.playerId.low] = player.get('clubs').map(club => club.properties.clubId.low);
+                allSelectedPlayers[player.get('p').properties.playerId.low] = player.get('clubs').map((club: any) => club.properties.clubId.low);
                 game[clubName].push(player.get('p').properties.name);
             }
             clubIndex++;
         }
 
-        const playersMultipleClubsInGame = {};
+        const playersMultipleClubsInGame: any = {};
 
         for (let player of Object.keys(allSelectedPlayers)) {
-            const clubsInGame = allSelectedPlayers[player].filter(club => allClubIds.includes(club));
+            const clubsInGame = allSelectedPlayers[player].filter((club: any) => allClubIds.includes(club));
             if (clubsInGame.length > 1) {
                 playersMultipleClubsInGame[player] = clubsInGame.sort();
             }
@@ -160,7 +160,7 @@ export default async function handler(request) {
             return handler(request);
         }
 
-        await saveGame(difficulty, ret, allClubIds, Object.keys(allSelectedPlayers).map(playerId => parseInt(playerId)));
+        await saveGame(difficulty, ret, allClubIds, Object.keys(allSelectedPlayers).map((playerId: string) => parseInt(playerId)));
 
         return ret;
     }
@@ -189,7 +189,7 @@ async function getClubs(includeClubs: number[] = [], excludeClubs: number[] = []
 }
 
 
-async function lookupPlayerByClub(clubId: number, excludedPlayers: number[], excludedClubs: number[] = [], minClubs = 1, maxClubs = 10, minApps = 50, includeClubs: number[] = []) {
+async function lookupPlayerByClub(clubId: number, excludedPlayers: number[], excludedClubs: number[] = [], minClubs: number = 1, maxClubs: number = 10, minApps: number = 50, includeClubs: number[] = []): Promise<any[]> {
     const { records, summary, keys } = await driver.executeQuery(
         `
             MATCH (p:Player WHERE NOT p.playerId IN $excludedPlayers)-[pf:PLAYED_FOR]-(ec:Club)
@@ -211,13 +211,13 @@ async function lookupPlayerByClub(clubId: number, excludedPlayers: number[], exc
     return records;
 }
 
-function intersect(a, b) {
+function intersect(a: any[], b: any[]) {
     var setB = new Set(b);
     return [...new Set(a)].filter(x => setB.has(x));
 }
 
 
-function getGameClubs(difficulty = 'easy') {
+function getGameClubs(difficulty: string = 'easy') {
     var clubs = getEnglishClubs();
 
     switch (difficulty) {

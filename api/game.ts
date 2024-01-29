@@ -1,8 +1,8 @@
 import getGameData from "./_generate.js";
 
 export default async function handler(
-  request,
-  response
+  request: any,
+  response: any
 ) {
     if (!request.url) return response.status(400);
 
