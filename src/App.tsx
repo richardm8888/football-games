@@ -30,6 +30,7 @@ export default function () {
         main: '#9a0033',
       },
     },
+    spacing: 8,
   });
 
   return (

@@ -41,8 +41,8 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
         )
     }
     return (
-        <AppBar position="static" sx={{ height: 70 }}>
-            <Toolbar sx={{ height: 70 }}>
+        <AppBar color="transparent" position="static" sx={{ height: 70, boxShadow: 'none' }}>
+            <Toolbar sx={{ height: 70, justifyContent: 'space-between', padding: 0 }}>
                 <IconButton
                     size="large"
                     edge="start"
@@ -53,7 +53,17 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography onClick={() => navigate('/')} variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <Typography 
+                    onClick={() => navigate('/')} 
+                    variant="h6" 
+                    component="div" 
+                    sx={{
+                        position: 'absolute', 
+                        left: 'calc(50% - 100px)',
+                        width: 200,
+                        textAlign: 'center' 
+                    }}
+                >
                     Football Connect
                 </Typography>
                 <div style={{ display: 'flex', gap: '16px'}}>

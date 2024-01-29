@@ -113,7 +113,15 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                 return group.words;
             }).flat()));
         }
-    }, [GameData, incorrectGuesses]);
+    }, [GameData]);
+
+    React.useEffect(() => {
+        if (incorrectGuesses.length == 5) {
+            setFailureOpen(true);
+            setGameState([]);
+            setFailure(true);
+        }
+    }, [incorrectGuesses]);
 
     React.useEffect(() => {
         if (correctGuesses.length === 4) {
