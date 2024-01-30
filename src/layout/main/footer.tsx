@@ -22,6 +22,8 @@ export default function () {
             <Typography variant="body2">
                 <Link to="/about-us">About us</Link>
                 {" | "}
+                <Link to="/terms-and-conditions">Terms and Conditions</Link>
+                {" | "}
                 <Link to="/privacy-policy">Privacy Policy</Link>
             </Typography>
         </Container>

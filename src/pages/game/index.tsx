@@ -1,24 +1,8 @@
 import * as React from 'react';
-import { useParams, useNavigate } from "react-router-dom";
-import Grid from './grid';
+import { useParams } from 'react-router-dom';
+import Page from '../../components/Page';
 
-import Provider from './provider';
-
-
-export default function ({ children }: { children?: React.ReactElement }) {
+export default function () {
     const params = useParams();
-    const navigate = useNavigate();
-
-    React.useEffect(() => {
-        if (!['easy', 'medium', 'hard'].includes(params?.difficulty ?? '')) {
-            console.log('HERE I AM');
-            navigate('/');
-        }
-    });
-
-    return (
-        <Provider difficulty={params?.difficulty ?? ''}>
-            <Grid difficulty={params?.difficulty ?? ''} />
-        </Provider>
-    );
+    return <Page slug={'difficulty/' + params?.difficulty} />;
 }

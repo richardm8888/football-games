@@ -13,7 +13,9 @@ import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import ArticleIcon from '@mui/icons-material/Article';
+import PolicyIcon from '@mui/icons-material/Policy';
 import SecurityIcon from '@mui/icons-material/Security';
 
 import styled from '@emotion/styled';
@@ -40,9 +42,9 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                 boxSizing: 'border-box',
             },
             }}
-            variant="persistent"
             anchor="left"
             open={open}
+            onClose={() => toggleDrawer()}
         >
             <DrawerHeader>
                 <IconButton onClick={toggleDrawer}>
@@ -90,7 +92,7 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                         toggleDrawer();
                     }}>
                         <ListItemIcon>
-                            <PlayCircleIcon />
+                            <StickyNote2Icon />
                         </ListItemIcon>
                         <ListItemText primary="Rules" />
                     </ListItemButton>
@@ -115,6 +117,17 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                             <SecurityIcon />
                         </ListItemIcon>
                         <ListItemText primary="Privacy Policy" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton onClick={() => {
+                        navigate('/terms-and-conditions');
+                        toggleDrawer();
+                    }}>
+                        <ListItemIcon>
+                            <PolicyIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Terms and Conditions" />
                     </ListItemButton>
                 </ListItem>
             </List>

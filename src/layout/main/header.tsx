@@ -42,7 +42,7 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
     }
     return (
         <AppBar color="transparent" position="static" sx={{ height: 70, boxShadow: 'none' }}>
-            <Toolbar sx={{ height: 70, justifyContent: 'space-between', padding: 0 }}>
+            <Toolbar sx={{ height: 70, justifyContent: 'space-between', padding: '0 10px' }}>
                 <IconButton
                     size="large"
                     edge="start"
@@ -67,7 +67,6 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
                     Football Connect
                 </Typography>
                 <div style={{ display: 'flex', gap: '16px'}}>
-                    {location.pathname !== '/rules' && <Button variant="contained" color="secondary" onClick={() => navigate('/rules')}>Rules</Button>}
                     {actionButton}
                 </div>
             </Toolbar>
