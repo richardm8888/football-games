@@ -21,7 +21,7 @@ import styled from '@emotion/styled';
 import { shuffleArray } from '../../../utils/arrays';
 import { GameContext } from './provider';
 
-import { saveGuesses, getGuesses, saveCorrectGuesses, getCorrectGuesses } from './helpers';
+import { saveGuesses, getGuesses, saveCorrectGuesses, getCorrectGuesses, getIncorrectGuesses, saveIncorrectGuesses } from './helpers';
 import type { CorrectGuess } from './helpers';
 
 import SuccessModal from '../../SuccessModal';
@@ -75,7 +75,7 @@ export default function ({ difficulty, children }: { difficulty: string, childre
     const [wrongGuess, setWrongGuess] = React.useState<boolean>(false);
     const [message, setMessage] = React.useState<string>('');
     const [guesses, setGuesses] = React.useState<string[]>(getGuesses(difficulty));
-    const [incorrectGuesses, setIncorrectGuesses] = React.useState<string[]>(getGuesses(difficulty));
+    const [incorrectGuesses, setIncorrectGuesses] = React.useState<string[]>(getIncorrectGuesses(difficulty));
     const [gameState, setGameState] = React.useState<string[]>([]);
     const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
     const [correctGuesses, setCorrectGuesses] = React.useState<CorrectGuess[]>(getCorrectGuesses(difficulty));
@@ -107,16 +107,22 @@ export default function ({ difficulty, children }: { difficulty: string, childre
     };
 
     React.useEffect(() => {
-        if (incorrectGuesses.length == 5) {
-            setFailureOpen(true);
-            setGameState([]);
-            setFailure(true);
-        } else {
-            const guessedGroups = correctGuesses.map((guess) => guess.name).flat();
-            
-            setGameState(shuffleArray(GameData.filter(group => !guessedGroups.includes(group.category)).map((group: any) => {
-                return group.words;
-            }).flat()));
+        if (GameData.length > 0) {
+            const newIncorrectGuesses = getIncorrectGuesses(difficulty);
+            setGuesses(getGuesses(difficulty));
+            setIncorrectGuesses(newIncorrectGuesses);
+            setCorrectGuesses(getCorrectGuesses(difficulty));
+            if (newIncorrectGuesses.length == 5) {
+                setFailureOpen(true);
+                setGameState([]);
+                setFailure(true);
+            } else {
+                const guessedGroups = correctGuesses.map((guess) => guess.name).flat();
+                
+                setGameState(shuffleArray(GameData.filter(group => !guessedGroups.includes(group.category)).map((group: any) => {
+                    return group.words;
+                }).flat()));
+            }
         }
     }, [GameData]);
 
@@ -127,12 +133,6 @@ export default function ({ difficulty, children }: { difficulty: string, childre
             setFailure(true);
         }
     }, [incorrectGuesses]);
-
-    React.useEffect(() => {
-        if (correctGuesses.length === 4) {
-            setMessage('You have completed the game!');
-        }
-    }, [gameState]);
 
     const alreadyGuessed = (items: string[]) => {
         if (incorrectGuesses.includes(items.sort().join(','))) {
@@ -173,7 +173,9 @@ export default function ({ difficulty, children }: { difficulty: string, childre
     }
 
     const checkGuess = () => {
-        setGuesses([...guesses, selectedItems.sort().join(',')]);
+        const newGuesses = [...guesses, selectedItems.sort().join(',')];
+        setGuesses(newGuesses);
+        saveGuesses(difficulty, newGuesses);
 
         for(let category in GameData) {
             if (selectedItems.sort().join(',') === GameData[category].words.sort().join(',')) {
@@ -195,7 +197,7 @@ export default function ({ difficulty, children }: { difficulty: string, childre
         }
 
         const newIncorrectGuesses = [...incorrectGuesses, selectedItems.sort().join(',')];
-        saveGuesses(difficulty, newIncorrectGuesses,)
+        saveIncorrectGuesses(difficulty, newIncorrectGuesses)
         setIncorrectGuesses(newIncorrectGuesses);
         setWrongGuess(true);
         setTimeout(() => {
@@ -313,28 +315,30 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                 
             </Container>
 
-            <Container 
-                sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center',
-                    width: '100%', 
-                    maxWidth: '100%', 
-                    margin: '0 auto',
-                    padding: '0 !important'
-                }}
-            >
-                <Typography variant="body2">Mistakes remaining:</Typography>
-                <div 
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        gap: 8,
+            {!failure && correctGuesses.length < 4 && (
+                <Container 
+                    sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        width: '100%', 
+                        maxWidth: '100%', 
+                        margin: '0 auto',
+                        padding: '0 !important'
                     }}
                 >
-                    {Array(5 - incorrectGuesses.length).fill(0).map(() => <SportsSoccerIcon />)}
-                </div>
-            </Container>
+                    <Typography variant="body2">Mistakes remaining:</Typography>
+                    <div 
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            gap: 8,
+                        }}
+                    >
+                        {Array(5 - incorrectGuesses.length).fill(0).map(() => <SportsSoccerIcon />)}
+                    </div>
+                </Container>
+            )}
 
             <Container 
                 sx={{ 
@@ -358,7 +362,7 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                     onClose={() => setMessage('')}
                 />
 
-                {!failure && (
+                {!failure && correctGuesses.length < 4 && (
                     <>
                         <Button
                             startIcon={<ShuffleIcon />}

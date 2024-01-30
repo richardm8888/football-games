@@ -20,11 +20,11 @@ export default function () {
         }}>
             <Typography variant="body2">&copy; 2024 Football Connect</Typography>
             <Typography variant="body2">
-                <Link to="/about-us">About us</Link>
+                <Link className="on-dark" to="/about-us">About us</Link>
                 {" | "}
-                <Link to="/terms-and-conditions">Terms and Conditions</Link>
+                <Link className="on-dark" to="/terms-and-conditions">Terms and Conditions</Link>
                 {" | "}
-                <Link to="/privacy-policy">Privacy Policy</Link>
+                <Link className="on-dark" to="/privacy-policy">Privacy Policy</Link>
             </Typography>
         </Container>
     );

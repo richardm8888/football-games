@@ -16,6 +16,24 @@ export function getGuesses(difficulty: string) {
     }
 }
 
+export function saveIncorrectGuesses(difficulty: string, guesses: string[]) {
+    localStorage.setItem('incorrectGuesses_' + difficulty, JSON.stringify({ date: new Date(), guesses }));
+}
+
+export function getIncorrectGuesses(difficulty: string) {
+    const guesses = localStorage.getItem('incorrectGuesses_' + difficulty);
+    if (guesses) {
+        const parsed = JSON.parse(guesses);
+        if (new Date(parsed.date) < new Date(new Date().setHours(0,0,0,0))) {
+            localStorage.removeItem('incorrectGuesses_' + difficulty);
+            return [];
+        }
+        return parsed.guesses;
+    } else {
+        return [];
+    }
+}
+
 export interface CorrectGuess {
     name: string, 
     items: any[], 

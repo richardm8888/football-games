@@ -53,19 +53,20 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography 
+                <img 
                     onClick={() => navigate('/')} 
-                    variant="h6" 
-                    component="div" 
-                    sx={{
+                    src="/logo.jpg" 
+                    title="Football Connect" 
+                    alt="Football Connect"
+                    height="60" 
+                    width="200"
+                    style={{
                         position: 'absolute', 
                         left: 'calc(50% - 100px)',
                         width: 200,
                         textAlign: 'center' 
                     }}
-                >
-                    Football Connect
-                </Typography>
+                />
                 <div style={{ display: 'flex', gap: '16px'}}>
                     {actionButton}
                 </div>

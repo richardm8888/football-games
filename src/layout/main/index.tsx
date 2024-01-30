@@ -6,7 +6,7 @@ import Footer from './footer';
 import Nav from './nav';
 
 const ContentContainer = styled.div`
-    min-height: calc(100vh - 180px);
+    min-height: calc(100vh - 160px);
     padding: 10px 0px;
     width: 100%;
 `;

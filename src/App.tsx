@@ -24,7 +24,7 @@ export default function () {
     palette: {
       mode: 'light',
       primary: {
-        main: '#009a67',
+        main: '#0650ba',
       },
       secondary: {
         main: '#9a0033',
