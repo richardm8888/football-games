@@ -14,7 +14,8 @@ import styled from '@emotion/styled';
 const StyledSelect = styled(Select)`
     height: 40px;
     background-color: ${props => props.theme.palette.background.paper};
-
+    font-size: 12px;
+    
     & .MuiOutlinedInput-notchedOutline {
         display: none;
     }
