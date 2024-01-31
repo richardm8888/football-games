@@ -108,6 +108,9 @@ export default async function handler(request: any): Promise<any[]> {
                     minApps += 50;
                 }
                 const players = await lookupPlayerByClub(clubId, allExcludedPlayers, excludedClubs, minClubs, maxClubs, minApps, includedClubs);
+                if (!players.length) {
+                    return handler(request);
+                }
                 const player = players[0];
                 allSelectedPlayers[player.get('p').properties.playerId.low] = player.get('clubs').map((club: any) => club.properties.clubId.low);
                 game[clubName].push(player.get('p').properties.name);
@@ -189,7 +192,7 @@ async function getClubs(includeClubs: number[] = [], excludeClubs: number[] = []
 }
 
 
-async function lookupPlayerByClub(clubId: number, excludedPlayers: number[], excludedClubs: number[] = [], minClubs: number = 1, maxClubs: number = 10, minApps: number = 50, includeClubs: number[] = []): Promise<any[]> {
+async function lookupPlayerByClub(clubId: number, excludedPlayers: number[], excludedClubs: number[] = [], minClubs: number = 1, maxClubs: number = 10, minApps: number = 50, includeClubs: number[] = []): Promise<any[]> {   
     const { records, summary, keys } = await driver.executeQuery(
         `
             MATCH (p:Player WHERE NOT p.playerId IN $excludedPlayers)-[pf:PLAYED_FOR]-(ec:Club)
@@ -205,7 +208,7 @@ async function lookupPlayerByClub(clubId: number, excludedPlayers: number[], exc
     );
 
     if (!records.length) {
-        return lookupPlayerByClub(clubId, excludedPlayers, excludedClubs, minClubs, maxClubs, minApps, includeClubs);
+        return [];
     }
 
     return records;

@@ -92,7 +92,6 @@ export default function ({ slug }: { slug: string }) {
                 justifyContent:"center" ,
                 alignItems: 'center',
                 width: '100%',
-                padding: 16,
                 margin: '0 auto',
                 gap: 8,
                 boxSizing: 'border-box'

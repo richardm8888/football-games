@@ -33,6 +33,11 @@ const GameGridBox = styled(animated(Paper))`
     box-shadow: none;
     width: 23.5%;
     max-width: 23.5%;
+
+    @media (max-width: 380px) {
+        width: 20%;
+        max-width: 20%;
+    }
 `;
 
 const GameButton = styled(ToggleButton)`
@@ -232,7 +237,7 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                 flexDirection: 'column',
                 justifyContent:"center" ,
                 width: '100%',
-                maxWidth: '500px',
+                maxWidth: '100%',
                 padding: 16,
                 margin: '0 auto',
                 gap: 8,

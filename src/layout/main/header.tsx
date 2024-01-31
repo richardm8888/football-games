@@ -2,12 +2,12 @@ import * as React from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';  
+
+import HeaderLeaderboard from '../../components/Advert/HeaderLeaderboard';
 
 import styled from '@emotion/styled';
 
@@ -17,6 +17,30 @@ const StyledSelect = styled(Select)`
 
     & .MuiOutlinedInput-notchedOutline {
         display: none;
+    }
+`;
+
+const Logo = styled.img`
+
+    height: 60px;
+    width: 200px;
+    position: absolute;
+    left: calc(50% - 100px);
+    text-align: center;
+
+    @media (max-width: 380px) {
+        left: calc(50% - 100px - 32px);
+        width: 180px;
+        height: 54px;
+    }
+`;
+
+const StyledAppBar = styled(AppBar)`
+    height: 130px;
+    box-shadow: none;
+
+    @media (min-width: 728px) {
+        height: 170px;
     }
 `;
 
@@ -41,7 +65,8 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
         )
     }
     return (
-        <AppBar color="transparent" position="static" sx={{ height: 70, boxShadow: 'none' }}>
+        <StyledAppBar color="transparent" position="static">
+            <HeaderLeaderboard advert={{ adUnit: 'difficulty-select', advertId: 'header-leaderboard' }} />
             <Toolbar sx={{ height: 70, justifyContent: 'space-between', padding: '0 10px' }}>
                 <IconButton
                     size="large"
@@ -53,24 +78,16 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
                 >
                     <MenuIcon />
                 </IconButton>
-                <img 
+                <Logo 
                     onClick={() => navigate('/')} 
                     src="/logo.jpg" 
                     title="Football Connect" 
                     alt="Football Connect"
-                    height="60" 
-                    width="200"
-                    style={{
-                        position: 'absolute', 
-                        left: 'calc(50% - 100px)',
-                        width: 200,
-                        textAlign: 'center' 
-                    }}
                 />
                 <div style={{ display: 'flex', gap: '16px'}}>
                     {actionButton}
                 </div>
             </Toolbar>
-        </AppBar>
+        </StyledAppBar>
     );
 }

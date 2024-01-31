@@ -3,16 +3,20 @@ import * as React from 'react';
 import styled from '@emotion/styled';
 
 const AdvertContainer = styled.div`
-    width: calc(100% + 48px);
+    width: 100%;
+    background-color: ${props => props.theme.palette.grey[100]};
     display: flex;
     justify-content: center;
-    padding: 16px 0;
 `;
 
 const StyledAdvert = styled.div`
-    min-width: 100%;
-    min-height: 50px; 
+    height: 60px;
     margin: 0 auto;
+    padding: 5px 0;
+
+    @media (min-width: 728px) {
+        height: 100px;
+    }
 `;
 
 export default function ({ advert }: { advert: any }) {
@@ -20,10 +24,8 @@ export default function ({ advert }: { advert: any }) {
         googletag.cmd.push(function() {
             const sizeMapping = googletag
                 .sizeMapping()
-                .addSize([728, 0], [728, 90], [468, 60], [300, 250])
-                .addSize([468, 0], [320, 50], [320, 100], [300, 250], [468, 60])
-                .addSize([340, 0], [320, 50], [320, 100], [300, 250])
-                .addSize([0, 0], [300, 250])
+                .addSize([728, 0], [728, 90])
+                .addSize([0, 0], [320, 50])
                 .build();
 
             let adUnit = googletag
@@ -33,7 +35,7 @@ export default function ({ advert }: { advert: any }) {
                     return slot.getSlotId().getDomId() == advert.advertId;
                 })[0];
             if (!adUnit) {
-                const slot = googletag.defineSlot('/23061355960/' + advert.adUnit, [[320, 50], [320, 100], [300, 250], [468, 60], [728, 90]], advert.advertId);
+                const slot = googletag.defineSlot('/23061355960/' + advert.adUnit, [[320, 50], [728, 90]], advert.advertId);
                 slot.defineSizeMapping(sizeMapping);
                 slot.addService(googletag.pubads());
                 googletag.display(advert.advertId);
