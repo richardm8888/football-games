@@ -75,19 +75,35 @@ async function saveGame(difficulty: string, gameData: any, clubIds: number[], pl
 
 export default async function handler(request: any): Promise<any[]> {
     const difficulty = request.query['difficulty'] ?? 'easy';
+    let excludedClubs: any[] = request.query['excludeClubs'] ?? [];
     const cached = await getGame(difficulty);
 
     if (cached) {
         return JSON.parse(cached);
     } else {
         const ydayGame = await getYesterdaysGame();
-        let excludedClubs: any[] = ydayGame.clubs ?? [];
+        excludedClubs.concat(ydayGame.clubs ?? []);
         let excludedPlayers: any[] =ydayGame.players ?? [];
-        let includedClubs: any[] = getGameClubs(difficulty);
 
         let allSelectedPlayers: any = {};
         let game: any = {};
-        const clubs = await getClubs(includedClubs, excludedClubs);
+        let clubs: any[] = [];
+        let clubs1: any[] = [];
+        let clubs2: any[] = [];
+        switch (difficulty) {
+            case 'easy':
+                clubs = await getClubs(4, getGameClubs('easy'), excludedClubs);
+                break;
+            case 'medium':
+                clubs = await getClubs(4, getGameClubs('medium'), excludedClubs);
+                break;
+            case 'hard':
+                clubs1 = await getClubs(2, getGameClubs('medium'), excludedClubs);
+                clubs2 = await getClubs(2, getGameClubs('hard'), excludedClubs);
+                clubs = clubs1.concat(clubs2);
+                break;
+        }
+
         let allClubIds: number[] = clubs.map((club: any) => club.clubId);
         let clubIndex: number = 1;
         for(let club in clubs) {
@@ -96,19 +112,20 @@ export default async function handler(request: any): Promise<any[]> {
             game[clubName] = [];
             for (let i = 0; i < 4; i++) {
                 let allExcludedPlayers = Object.keys(allSelectedPlayers).map((playerId: string) => parseInt(playerId)).concat(excludedPlayers);
-                let excludedClubs: any[] = [];
+                let excludeClubs: any[] = [];
                 let minClubs = 2;
                 let maxClubs = 10;
                 let minApps = 100 - (150 / (clubIndex + 1));
                 if (clubIndex == 4) {
-                    excludedClubs = allClubIds.filter(cId => cId !== clubId) ?? [];
+                    excludeClubs = allClubIds.filter(cId => cId !== clubId) ?? [];
                     minClubs = 1;
                     minApps += 100;
                 } else if (clubIndex == 3) {
                     minApps += 50;
                 }
-                const players = await lookupPlayerByClub(clubId, allExcludedPlayers, excludedClubs, minClubs, maxClubs, minApps, includedClubs);
+                const players = await lookupPlayerByClub(clubId, allExcludedPlayers, excludeClubs, minClubs, maxClubs, minApps);
                 if (!players.length) {
+                    request.query['excludeClubs'] = [clubId];
                     return handler(request);
                 }
                 const player = players[0];
@@ -170,14 +187,14 @@ export default async function handler(request: any): Promise<any[]> {
 }
 
 
-async function getClubs(includeClubs: number[] = [], excludeClubs: number[] = []) {
+async function getClubs(numClubs: number, includeClubs: number[] = [], excludeClubs: number[] = []) {
     const { records, summary, keys } = await driver.executeQuery(
         `
         MATCH (c:Club WHERE c.clubId IN $includeClubs AND NOT c.clubId IN $excludeClubs) 
         WITH c.clubId as clubId, c.name as clubName
-        WITH clubId, clubName, rand() as r ORDER BY r LIMIT 4
+        WITH clubId, clubName, rand() as r ORDER BY r LIMIT toInteger($numClubs)
         RETURN clubId, clubName`,
-        { includeClubs, excludeClubs }
+        { numClubs, includeClubs, excludeClubs }
     );
 
     let clubs: any[] = [];
@@ -192,19 +209,19 @@ async function getClubs(includeClubs: number[] = [], excludeClubs: number[] = []
 }
 
 
-async function lookupPlayerByClub(clubId: number, excludedPlayers: number[], excludedClubs: number[] = [], minClubs: number = 1, maxClubs: number = 10, minApps: number = 50, includeClubs: number[] = []): Promise<any[]> {   
+async function lookupPlayerByClub(clubId: number, excludedPlayers: number[], excludedClubs: number[] = [], minClubs: number = 1, maxClubs: number = 10, minApps: number = 50): Promise<any[]> {   
     const { records, summary, keys } = await driver.executeQuery(
         `
             MATCH (p:Player WHERE NOT p.playerId IN $excludedPlayers)-[pf:PLAYED_FOR]-(ec:Club)
             WITH p, sum(pf.count) as totalPlayed WHERE totalPlayed > $minApps
             MATCH (p)-[pf:PLAYED_FOR WHERE pf.count > 30]-(c:Club {clubId: $clubId})
             WITH DISTINCT p, c
-            MATCH (p)-[:PLAYED_FOR]-(c2:Club WHERE c2.clubId IN $includeClubs AND NOT c2.clubId IN $excludedClubs)
+            MATCH (p)-[:PLAYED_FOR]-(c2:Club WHERE NOT c2.clubId IN $excludedClubs)
             WITH p, collect(DISTINCT c2) as clubs
             WITH p, clubs, size(clubs) as n_clubs WHERE n_clubs >= $minClubs AND n_clubs <= $maxClubs
             RETURN p, clubs, n_clubs, rand() as r ORDER BY r LIMIT 1
         `,
-        { clubId, excludedPlayers, excludedClubs, minClubs, maxClubs, minApps, includeClubs },
+        { clubId, excludedPlayers, excludedClubs, minClubs, maxClubs, minApps },
     );
 
     if (!records.length) {
@@ -221,41 +238,60 @@ function intersect(a: any[], b: any[]) {
 
 
 function getGameClubs(difficulty: string = 'easy') {
-    var clubs = getEnglishClubs();
+    var clubs = getBigEnglishClubs();
 
     switch (difficulty) {
         case 'medium':
-            clubs = clubs.concat(getSpanishClubs());
+            clubs = getOtherEnglishClubs().concat(getScottishClubs(), getSpanishClubs());
             break;
         case 'hard':
-            clubs = clubs.concat(getSpanishClubs(), getItalianClubs(), getGermanClubs(), getFrenchClubs());
+            clubs = getGermanClubs().concat(getItalianClubs(), getFrenchClubs());
             break
     }
     
     return clubs;
 }
 
-function getEnglishClubs() {
+function getBigEnglishClubs() {
     return [
-        762,
-        543,
-        873,
-        703,
-        631,
-        350,
-        985,
-        379,
-        281,
-        1148,
-        931,
-        1237,
-        989,
-        148,
-        31,
-        405,
-        1132,
-        29,
-        11,
+        762, // Newcastle
+        631, // Chelsea
+        985, // Man Utd
+        281, // Man City
+        148, // Spurs
+        31, // Liverpool
+        29, // Everton
+        11, // Arsenal
+        // 1003, // Leicester
+    ];
+}
+
+function getOtherEnglishClubs() {
+    return [
+        543, // Wolves
+        873, // Crystal Palace
+        379, // West Ham
+        931, // Fulham
+        1237, // Brighton
+        989, // Bournemouth
+        405, // Villa
+        1132, // Burnley
+        1148, // Brentford
+        // 703, // Forest
+        // 350, // Sheff Utd
+        // 1031, // Luton
+        // 984, // West Brom
+        // 399, // Leeds
+        // 289, // Sunderland
+        // 1123, // Norwich
+        // 1010, // Watford
+    ];
+}
+
+function getScottishClubs() {
+    return [
+        // 471, // Celtic
+        // 124, // Rangers
     ];
 }
 
@@ -263,9 +299,8 @@ function getSpanishClubs() {
     return [
         131, // Barcelona
         418, // Real Madrid
-        // 940, // Celta Vigo
-        // 368, // Sevilla
-        // 13, // Athletico
+        368, // Sevilla
+        13, // Athletico
     ];
 }
 
@@ -274,9 +309,9 @@ function getItalianClubs() {
         46, // Inter
         506, // Juve
         5, // AC
-        // 12, // Roma
-        // 398, // Lazio
-        // 6195, //Napoli
+        12, // Roma
+        398, // Lazio
+        6195, //Napoli
     ];
 }
 
