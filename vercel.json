@@ -7,7 +7,7 @@
     },
     "crons": [
       {
-        "path": "api/game.ts",
+        "path": "/api/game.ts",
         "schedule": "5,10,15 0,1,2 * * *"
       }
     ],
