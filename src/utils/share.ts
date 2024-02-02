@@ -14,7 +14,8 @@ export const shareStatus = (
 ) => {
   const textToShare =
     `Football Connect #${difficulty}\n\n` +
-    generateEmojiGrid(gameData, submittedGuesses).join("\n");
+    generateEmojiGrid(gameData, submittedGuesses).join("\n") + "\n\n" +
+    "https://www.football-connect.co.uk";
 
   const shareData = { text: textToShare };
 
