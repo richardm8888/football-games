@@ -14,7 +14,6 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <!-- Bidvertiser2091024 -->
     <BrowserRouter>
       <App />
     </BrowserRouter>
