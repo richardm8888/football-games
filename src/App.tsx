@@ -48,8 +48,8 @@ export default function () {
               <Route path="/" element={<Home />} />
               <Route path="/difficulty" element={<Difficulty />} />
               <Route path="/difficulty/:difficulty" element={<Game />} />
-              <Route path="/:category?/:slug" element={<Article />} />
-              <Route path="/blog/:category?" element={<Articles />} />
+              <Route path="/:category/:slug" element={<Article />} />
+              <Route path="/:category" element={<Articles />} />
             </Route>
           </Routes>
         </ApolloProvider>

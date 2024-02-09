@@ -66,7 +66,7 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                 </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton onClick={() => {
-                        navigate('/about-us');
+                        navigate('/about/about-us');
                         toggleDrawer();
                     }}>
                         <ListItemIcon>
@@ -88,7 +88,7 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                 </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton onClick={() => {
-                        navigate('/rules');
+                        navigate('/about/rules');
                         toggleDrawer();
                     }}>
                         <ListItemIcon>
@@ -97,7 +97,7 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                         <ListItemText primary="Rules" />
                     </ListItemButton>
                 </ListItem>
-                {/* <ListItem disablePadding>
+                <ListItem disablePadding>
                     <ListItemButton onClick={() => {
                         navigate('/blog');
                         toggleDrawer();
@@ -107,10 +107,10 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                         </ListItemIcon>
                         <ListItemText primary="Blog" />
                     </ListItemButton>
-                </ListItem> */}
+                </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton onClick={() => {
-                        navigate('/privacy-policy');
+                        navigate('/about/privacy-policy');
                         toggleDrawer();
                     }}>
                         <ListItemIcon>
@@ -121,7 +121,7 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                 </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton onClick={() => {
-                        navigate('/terms-and-conditions');
+                        navigate('/about/terms-and-conditions');
                         toggleDrawer();
                     }}>
                         <ListItemIcon>

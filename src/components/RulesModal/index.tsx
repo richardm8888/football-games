@@ -10,8 +10,10 @@ import { useQuery } from '@apollo/client';
 import Markdown from 'react-markdown'
 
 import { getArticle } from '../../queries/blog';
+import { renderContentBlocks } from '../../components/Page/helpers';
 
 export default function ({ open, setOpen }: { open: boolean, setOpen: (open: boolean) => void }) {
+    const navigate = useNavigate();
     const {loading, data, error} = useQuery(getArticle, {
         variables: {
             slug: 'rules'
@@ -20,9 +22,10 @@ export default function ({ open, setOpen }: { open: boolean, setOpen: (open: boo
     
     return (
         <Dialog open={open} onClose={() => setOpen(false)}>
-            <DialogTitle>How to play</DialogTitle>
             <DialogContent>
-                {data && <Markdown>{data.article.content.markdown}</Markdown>}
+                {data?.article?.content2?.map((contentBlock: any, i: number) => {
+                    return renderContentBlocks(contentBlock, i, navigate);
+                })}
                 
             </DialogContent>
             <DialogActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
