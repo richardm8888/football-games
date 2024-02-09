@@ -395,15 +395,17 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                 )}
             </Container>
 
-            <Button
-                startIcon={<StickyNote2Icon />}
-                onClick={() => {
-                    setRulesOpen(true);
-                }} 
-                variant="text"
-            >
-                Rules
-            </Button>
+            <div>
+                <Button
+                    startIcon={<StickyNote2Icon />}
+                    onClick={() => {
+                        setRulesOpen(true);
+                    }} 
+                    variant="text"
+                >
+                    Rules
+                </Button>
+            </div>
         </div>
     );
 }

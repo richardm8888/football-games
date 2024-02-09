@@ -28,6 +28,7 @@ const Logo = styled.img`
     position: absolute;
     left: calc(50% - 100px);
     text-align: center;
+    cursor: pointer;
 
     @media (max-width: 380px) {
         left: calc(50% - 100px - 32px);
