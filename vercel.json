@@ -7,7 +7,22 @@
       "api/update-sitemap.ts": {
         "memory": 1024,
         "maxDuration": 10
+      },
+      "api/sitemap.ts": {
+        "memory": 1024,
+        "maxDuration": 10
       }
     },
+    "headers": [
+      {
+        "source": "/api/sitemap.ts",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/xml"
+          }
+        ]
+      }
+    ],
     "devCommand": "npm start"
 }
