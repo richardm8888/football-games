@@ -63,7 +63,7 @@ export default async function handler(
     if (rows.length === 0) {
         await client.query(`INSERT INTO sitemap (loc, lastmod, priority) VALUES ($1, $2, $3)`, [url, body?.data.updatedAt, 0.8]);
     } else {
-        await client.query(`UPDATE sitemap SET lastmod = $1`, [body?.data.updatedAt]);
+        client.query(`UPDATE sitemap SET lastmod = $1`, [body?.data.updatedAt]);
     }
 
     client.end();
