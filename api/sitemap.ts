@@ -23,8 +23,10 @@ export default async function handler(
 
     result.urlset.url = rows.map((row: any) => {
         row.loc = `https://www.football-connect.co.uk/${row.loc}`;
+        row.lastmod = row.lastmod.toJSON();
         return row;
     });
+
     const builder = new Builder();
     const newxml = builder.buildObject(result);
    

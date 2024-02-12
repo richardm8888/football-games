@@ -53,21 +53,20 @@ export default async function handler(
         if (error) {
             return response.status(400);
         }
-        categorySlug = categoryData.category.slug;
+        categorySlug = categoryData.category.slug + '/';
     }
 
-    const categoryUrl = `${(categorySlug ? categorySlug + '/' : '/')}`;
-    const url = `${(categoryUrl)}${body?.data?.slug}`;
+    const categoryUrl = `${(categorySlug ? categorySlug : '')}`;
+    const slug = body?.data?.slug == 'home' ? '' : body?.data?.slug;
+    const url = `${(categoryUrl)}${slug}`;
 
     const { rows } = await client.query(`SELECT * FROM sitemap WHERE loc = $1`, [url]);
     if (rows.length === 0) {
         await client.query(`INSERT INTO sitemap (loc, lastmod, priority) VALUES ($1, $2, $3)`, [url, body?.data.updatedAt, 0.8]);
     } else {
-        client.query(`UPDATE sitemap SET lastmod = $1`, [body?.data.updatedAt]);
+        await client.query(`UPDATE sitemap SET lastmod = $1`, [body?.data.updatedAt]);
     }
 
-    client.end();
-    apolloClient.stop();
    
-    return response.status(204);
+    return response.status(204).send();
 }
