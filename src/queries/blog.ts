@@ -10,8 +10,11 @@ export const getArticle = gql`
             slug
             summary
             title
-            content {
-                markdown
+            image {
+              fileName
+              url
+              width
+              height
             }
             content2 {
                 ... on ContentBlock {
@@ -114,10 +117,20 @@ export const getCategory = gql`
 `;
 
 export const getCategories = gql`
-    query Categories {
-        categories (where: {slug_not_in: ["blog", "about"]}) {
+    query Categories ($nCategories: Int!) {
+        categories (
+            where: {slug_not_in: ["blog", "about"]}
+            first: $nCategories
+            orderBy: publishedAt_ASC
+        ) {
             slug
             title
+            image {
+              fileName
+              url
+              width
+              height
+            }
         }
     }
 `;
@@ -130,11 +143,14 @@ export const getArticles = gql`
                 slug
             }
             slug
+            image {
+                fileName
+                url
+                width
+                height
+            }
             summary
             title
-            content {
-                markdown
-            }
             publishedAt
             updatedAt
             createdBy {
@@ -153,11 +169,14 @@ export const getLatest = gql`
                 slug
             }
             slug
+            image {
+                fileName
+                url
+                width
+                height
+            }
             summary
             title
-            content {
-                markdown
-            }
             publishedAt
             updatedAt
             createdBy {

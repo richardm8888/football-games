@@ -4,10 +4,11 @@ import { useQuery } from '@apollo/client';
 
 import Typography from '@mui/material/Typography';
 import { renderContentBlocks } from '../../components/Page/helpers';
-import { ArticlePageLayout, ArticleContent, Categories } from '../articles/styles';
+import { ArticlePageLayout, ArticleContent } from '../articles/styles';
+import Categories from '../../components/Categories';
 
-import { getArticle, getCategories } from '../../queries/blog';
-import Page from '../../components/Page';
+import { getArticle } from '../../queries/blog';
+
 
 export default function ({ children }: { children?: React.ReactElement }) {
     const navigate = useNavigate();
@@ -19,13 +20,7 @@ export default function ({ children }: { children?: React.ReactElement }) {
         }
     });
 
-    const {loading: catLoading, data: catData, error: catError} = useQuery(getCategories, {
-        variables: {
-            slug: params.category
-        }
-    });
-
-    if (loading || error || catLoading || catError) {
+    if (loading || error) {
         return null;
     }
 
@@ -39,23 +34,19 @@ export default function ({ children }: { children?: React.ReactElement }) {
         }
     }
 
+    const contentStyle = params.category == 'about' ? { width: '100%' } : { };
+
     return (
         <ArticlePageLayout>
-            <ArticleContent>
+            <ArticleContent style={contentStyle}>
+                <img src={data?.article?.image?.url} style={{ width: '100%' }} />
                 {data?.article?.content2?.map((contentBlock: any, i: number) => {
                     return renderContentBlocks(contentBlock, i, navigate);
                 })}
             </ArticleContent>
 
             {params.category !== 'about' && (
-                <Categories>
-                    <Typography variant="h4">{"Categories"}</Typography>
-                    {catData?.categories.map((subCategory: any) => {
-                        return (
-                            <Link to={`/${subCategory.slug}`}>{subCategory.title}</Link>
-                        );
-                    })}
-                </Categories>
+                <Categories categorySlug={params.category ?? ''} />
             )}
         </ArticlePageLayout>
     );

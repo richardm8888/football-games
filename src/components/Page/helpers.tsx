@@ -56,7 +56,7 @@ export function renderContentBlocks(contentBlocks: any, i: number, navigate: any
                 justifyContent: contentBlocks.direction == 'column' ? "center" : alignment,
                 alignItems: contentBlocks.direction == 'row' ? 'center' : alignment,
                 width: '100%',
-                padding: 16,
+                padding: 0,
                 margin: '0 auto',
                 gap: 8,
                 boxSizing: 'border-box',

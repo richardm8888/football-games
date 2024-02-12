@@ -5,20 +5,17 @@ export const ArticlePageLayout = styled('div')`
     width: 100%;
     gap: 8px;
     box-sizing: border-box;
+    flex-wrap: wrap;
 `;
 
 export const ArticleContent = styled('div')`
     display: flex;
     flex-direction: column;
     gap: 16px;
-    flex-grow: 1;
     padding: 16px;
-`;
+    width: calc(100% - 300px);
 
-export const Categories = styled('div')`
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 16px;
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 `;
