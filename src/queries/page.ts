@@ -35,10 +35,10 @@ export const getPage = gql`
                                 ... on Image {
                                     __typename
                                     image {
-                                    size
-                                    url
-                                    fileName
+                                        url
+                                        fileName
                                     }
+                                    widthStyle
                                 }
                                 ... on Advert {
                                     __typename
@@ -71,10 +71,10 @@ export const getPage = gql`
                         ... on Image {
                             __typename
                             image {
-                            size
-                            url
-                            fileName
+                                url
+                                fileName
                             }
+                            widthStyle
                         }
                         ... on Advert {
                             __typename

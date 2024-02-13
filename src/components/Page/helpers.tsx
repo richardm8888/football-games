@@ -77,7 +77,7 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
                     key={'content-block-' + i}
                     src={contentBlock.image[0].url}
                     alt={contentBlock.image[0].fileName}
-                    widthStyle={contentBlock.width}
+                    widthStyle={contentBlock.widthStyle}
                 />
             );
         case 'LatestArticleCarousel':

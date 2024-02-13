@@ -46,10 +46,11 @@ export const getArticle = gql`
                                 ... on Image {
                                     __typename
                                     image {
-                                    size
-                                    url
-                                    fileName
+                                        width
+                                        url
+                                        fileName
                                     }
+                                    widthStyle
                                 }
                                 ... on Advert {
                                     __typename
@@ -78,10 +79,11 @@ export const getArticle = gql`
                         ... on Image {
                             __typename
                             image {
-                            size
-                            url
-                            fileName
+                                width
+                                url
+                                fileName
                             }
+                            widthStyle
                         }
                         ... on Advert {
                             __typename
@@ -121,7 +123,7 @@ export const getCategories = gql`
         categories (
             where: {slug_not_in: ["blog", "about"]}
             first: $nCategories
-            orderBy: publishedAt_ASC
+            orderBy: publishedAt_DESC
         ) {
             slug
             title
@@ -163,7 +165,10 @@ export const getArticles = gql`
 
 export const getLatest = gql`
     query Latest {
-        articles (where: { category: { slug_not: "about" } }) {
+        articles (
+            where: { category: { slug_not: "about" } }
+            orderBy: publishedAt_DESC
+        ) {
             id
             category {
                 slug
