@@ -39,7 +39,7 @@ export default function ({ children }: { children?: React.ReactElement }) {
     return (
         <ArticlePageLayout>
             <ArticleContent style={contentStyle}>
-                <img src={data?.article?.image?.url} style={{ width: '100%' }} />
+                {/*<img src={data?.article?.image?.url} style={{ width: '100%' }} />*/}
                 {data?.article?.content2?.map((contentBlock: any, i: number) => {
                     return renderContentBlocks(contentBlock, i, navigate);
                 })}
