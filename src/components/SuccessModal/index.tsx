@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Snackbar from '@mui/material/Snackbar';
+import ShareIcon from '@mui/icons-material/Share';
 
 import { generateEmojiGrid } from '../../utils/emoji';
 import { shareStatus } from '../../utils/share';
@@ -26,12 +26,10 @@ export default function ({ difficulty, open, setOpen, gameData, guesses }: { dif
     return (
         <Dialog open={open} onClose={() => setOpen(false)}>
             <DialogTitle>
-                {'Success!'}
-                <br />
-                {`Next ${difficulty} game is in ${hours} hour${hours > 1 ? 's' : ''} and ${mins} minute${mins > 1 ? 's' : ''}.`}
+                <Typography variant="subtitle1">{`You have successfully completed todays ${difficulty} game!`}</Typography>
+                <Typography variant="subtitle2">{`Next ${difficulty} game is in ${hours} hour${hours > 1 ? 's' : ''} and ${mins} minute${mins > 1 ? 's' : ''}.`}</Typography>
             </DialogTitle>
             <DialogContent>
-                <p>{`You have successfully completed todays ${difficulty} game!`}</p>
                 {generateEmojiGrid(gameData, guesses).map((row: any, i: number) => {
                     return <Typography key={i}>{row}</Typography>
                 })}
@@ -40,17 +38,26 @@ export default function ({ difficulty, open, setOpen, gameData, guesses }: { dif
                 <Button variant="text" onClick={() => navigate('/difficulty')}>Change difficulty</Button>
                 <Button 
                     variant="contained" 
+                    startIcon={<ShareIcon />}
                     onClick={() => {
                         shareStatus(
                             difficulty, 
                             gameData, 
                             guesses, 
-                            () => setMessage('Copied to clipboard!'), 
+                            () => {
+                                window.gtag('event', 'share', {
+                                    method: 'clipboard',
+                                    content_type: 'game',
+                                    item_id: difficulty,
+                                });
+                                setMessage('Copied to clipboard!');
+                                alert('Results copied to clipboard!');
+                            }, 
                             () => setMessage('Failed to share!')
                         );
                     }}
                 >
-                    Share
+                    Share Results
                 </Button>
             </DialogActions>
         </Dialog>

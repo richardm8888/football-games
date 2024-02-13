@@ -52,7 +52,9 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
             return (
                 <Button
                     key={'content-block-' + i}
-                    onClick={() => navigate(contentBlock.url)} 
+                    onClick={() => {
+                        navigate(contentBlock.url);
+                    }} 
                     color={contentBlock.colour}
                     variant="contained"
                 >

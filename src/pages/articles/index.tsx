@@ -1,18 +1,13 @@
 import * as React from 'react';
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useQuery } from '@apollo/client';
-import Typography from '@mui/material/Typography';
 import { ArticlePageLayout, ArticleContent } from './styles';
 import Categories from '../../components/Categories';
-
-
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import {Helmet} from "react-helmet";
 
 import { getArticles, getCategories, getLatest } from '../../queries/blog';
 import ListedArticle from '../../components/ListedArticle';
+import { ucWords } from '../../utils/strings';
 
 export default function ({ children }: { children?: React.ReactElement }) {
     const navigate = useNavigate();
@@ -42,6 +37,9 @@ export default function ({ children }: { children?: React.ReactElement }) {
 
     return (
         <ArticlePageLayout>
+            <Helmet>
+                <title>{'Football Connect - ' + ucWords(params.category ?? '')}</title>
+            </Helmet>
             <ArticleContent>
                 {params.category === 'blog' && latestData?.articles.map((article: any) => {
                     return (

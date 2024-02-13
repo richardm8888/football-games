@@ -2,7 +2,8 @@ import * as React from 'react';
 import {
   Routes,
   Route,
-  Outlet
+  Outlet,
+  useLocation
 } from "react-router-dom";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import StyledEngineProvider from '@mui/material/StyledEngineProvider';
@@ -13,8 +14,10 @@ import Article from './pages/article';
 import Articles from './pages/articles';
 import Difficulty from './pages/difficulty';
 import Game from './pages/game';
+import { getScreenName } from './routing';
 
 export default function () {
+  const location = useLocation();
   const client = new ApolloClient({
       uri: 'https://eu-west-2.cdn.hygraph.com/content/clrxb05v2128g01ut2nskdnz4/master',
       cache: new InMemoryCache(),
@@ -32,6 +35,12 @@ export default function () {
     },
     spacing: 8,
   });
+
+  React.useEffect(() => {
+    window.gtag('event', 'screen_view', {
+      'screen_name': getScreenName(location.pathname)
+    });
+  }, [location.pathname]);
 
   return (
     <StyledEngineProvider injectFirst>

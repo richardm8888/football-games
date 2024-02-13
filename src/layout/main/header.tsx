@@ -10,6 +10,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import HeaderLeaderboard from '../../components/Advert/HeaderLeaderboard';
 
 import styled from '@emotion/styled';
+import isPropValid from '@emotion/is-prop-valid';
 
 const StyledSelect = styled(Select)`
     height: 40px;
@@ -23,26 +24,26 @@ const StyledSelect = styled(Select)`
 
 const Logo = styled.img`
 
-    height: 60px;
-    width: 200px;
+    height: 50px;
+    width: 150px;
     position: absolute;
-    left: calc(50% - 100px);
+    left: calc(50% - 75px);
     text-align: center;
     cursor: pointer;
-
-    @media (max-width: 380px) {
-        left: calc(50% - 100px - 32px);
-        width: 180px;
-        height: 54px;
-    }
 `;
 
-const StyledAppBar = styled(AppBar)<{ isHome: boolean }>`
-    height: ${props => props.isHome ? '0' : '130'}px;
+const StyledAppBar = styled(AppBar, {
+    shouldForwardProp: (prop) => {
+        return (
+            isPropValid(prop)  && !['$isHome'].includes(prop)
+        );
+    }
+})<{ $isHome: boolean }>`
+    height: ${props => props.$isHome ? '0' : '120'}px;
     box-shadow: none;
 
     @media (min-width: 728px) {
-        height: ${props => props.isHome ? '0' : '170'}px;
+        height: ${props => props.$isHome ? '0' : '160'}px;
     }
 `;
 
@@ -67,17 +68,24 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
         )
     }
     return (
-        <StyledAppBar isHome={location.pathname == '/'} color="transparent" position="static">
+        <StyledAppBar $isHome={location.pathname == '/'} color="transparent" position="static">
             {location.pathname !== '/' && (
                 <HeaderLeaderboard advert={{ adUnit: 'difficulty-select', advertId: 'header-leaderboard' }} />
             )}
-            <Toolbar sx={{ height: 70, justifyContent: 'space-between', padding: '0 10px' }}>
+            <Toolbar 
+                sx={{ 
+                    minHeight: '60px !important', 
+                    height: 60, 
+                    justifyContent: 'space-between', 
+                    padding: '0 10px',
+                    backgroundColor: location.pathname == '/' ? 'transparent': '#ffffff'
+                }}>
                 <IconButton
                     size="large"
                     edge="start"
                     color="inherit"
                     aria-label="menu"
-                    sx={{ mr: 2 }}
+                    sx={{ mr: 2, p: 1 }}
                     onClick={toggleDrawer}
                 >
                     <MenuIcon />

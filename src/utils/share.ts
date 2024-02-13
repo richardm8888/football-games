@@ -5,7 +5,7 @@ const parser = new UAParser();
 const browser = parser.getBrowser();
 const device = parser.getDevice();
 
-export const shareStatus = (
+export const shareStatus = async (
   difficulty: string,
   gameData: any,
   submittedGuesses: any,
@@ -28,6 +28,14 @@ export const shareStatus = (
     }
   } catch (error) {
     shareSuccess = false;
+  }
+
+  if (shareSuccess) {
+      window.gtag('event', 'share', {
+        method: 'web',
+        content_type: 'game',
+        item_id: difficulty,
+      });
   }
 
   try {

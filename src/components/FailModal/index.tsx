@@ -26,8 +26,8 @@ export default function ({ difficulty, open, setOpen, gameData, guesses }: { dif
     return (
         <Dialog open={open} onClose={() => setOpen(false)}>
             <DialogTitle sx={{ textAlign: 'center' }}>
-                {'Unlucky!'} <br />
-                {`Next ${difficulty} game is in ${hours} hour${hours > 1 ? 's' : ''} and ${mins} minute${mins > 1 ? 's' : ''}.`}
+                <Typography variant="subtitle1">{`You didn't manage to successfully completed todays ${difficulty} game!`}</Typography>
+                <Typography variant="subtitle2">{`Next ${difficulty} game is in ${hours} hour${hours > 1 ? 's' : ''} and ${mins} minute${mins > 1 ? 's' : ''}.`}</Typography>
             </DialogTitle>
             <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
                 {generateEmojiGrid(gameData, guesses).map((row: any, i: number) => {
@@ -50,7 +50,15 @@ export default function ({ difficulty, open, setOpen, gameData, guesses }: { dif
                             difficulty, 
                             gameData, 
                             guesses, 
-                            () => setMessage('Copied to clipboard!'), 
+                            () => {
+                                window.gtag('event', 'share', {
+                                    method: 'clipboard',
+                                    content_type: 'game',
+                                    item_id: difficulty,
+                                });
+                                setMessage('Copied to clipboard!');
+                                alert('Results copied to clipboard!');
+                            }, 
                             () => setMessage('Failed to share!')
                         );
                     }}

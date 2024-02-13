@@ -6,6 +6,7 @@ import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import UndoIcon from '@mui/icons-material/Undo';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ShareIcon from '@mui/icons-material/Share';
 
 import Snackbar from '@mui/material/Snackbar';
 import Container from '@mui/material/Container';
@@ -395,7 +396,7 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                 )}
             </Container>
 
-            <div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '30px' }}>
                 <Button
                     startIcon={<StickyNote2Icon />}
                     onClick={() => {
@@ -405,6 +406,22 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                 >
                     Rules
                 </Button>
+
+                {(correctGuesses.length == 4 || incorrectGuesses.length == 5) && (
+                    <Button
+                        startIcon={<ShareIcon />}
+                        onClick={() => {
+                            if (correctGuesses.length == 4) {
+                                setSuccessOpen(true);
+                            } else {
+                                setFailureOpen(true);
+                            }
+                        }} 
+                        variant="text"
+                    >
+                        Share Results
+                    </Button>
+                )}
             </div>
         </div>
     );

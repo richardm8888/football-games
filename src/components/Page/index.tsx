@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client';
 import { renderContentBlocks } from './helpers';
 import { getPage } from '../../queries/page';
 import styled from '@emotion/styled';
+import {Helmet} from "react-helmet";
 
 const Container = styled.div`
     display: flex;
@@ -27,6 +28,10 @@ export default function ({ slug }: { slug: string }) {
 
     return (
         <Container>
+
+            <Helmet>
+                <title>{'Football Connect - ' + data?.page?.title ?? ''}</title>
+            </Helmet>
             {data?.page?.contentBlocks?.map((contentBlock: any, i: number) => {
                 return renderContentBlocks(contentBlock, i, navigate);
             })}

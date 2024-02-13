@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from '@apollo/client';
 
-import Typography from '@mui/material/Typography';
+import {Helmet} from "react-helmet";
 import { renderContentBlocks } from '../../components/Page/helpers';
 import { ArticlePageLayout, ArticleContent } from '../articles/styles';
 import Categories from '../../components/Categories';
@@ -38,6 +38,9 @@ export default function ({ children }: { children?: React.ReactElement }) {
 
     return (
         <ArticlePageLayout>
+            <Helmet>
+                <title>{'Football Connect - ' + data.article.title}</title>
+            </Helmet>
             <ArticleContent style={contentStyle}>
                 {/*<img src={data?.article?.image?.url} style={{ width: '100%' }} />*/}
                 {data?.article?.content2?.map((contentBlock: any, i: number) => {
