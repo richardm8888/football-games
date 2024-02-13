@@ -68,7 +68,7 @@ export default function ({ categorySlug }: { categorySlug?: string|null }) {
                                 title={subCategory?.image?.fileName ?? 'Placeholder'}
                             />
                             <CardContent sx={{ padding: 1 }}>
-                                <Typography gutterBottom variant="h6" sx={{ textAlign: 'center', margin: 0 }}>{subCategory.title} </Typography>
+                                <Typography gutterBottom variant="subtitle2" sx={{ textAlign: 'center', margin: 0 }}>{subCategory.title} </Typography>
                             </CardContent>
                         </CardActionArea>
                     </Category>

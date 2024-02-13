@@ -3,6 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from '@apollo/client';
 import { renderContentBlocks } from './helpers';
 import { getPage } from '../../queries/page';
+import styled from '@emotion/styled';
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+    gap: 8px;
+    box-sizing: border-box;
+`;  
 
 export default function ({ slug }: { slug: string }) {
     const navigate = useNavigate();
@@ -14,21 +26,10 @@ export default function ({ slug }: { slug: string }) {
     });
 
     return (
-        <div
-            style={{ 
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent:"center" ,
-                alignItems: 'center',
-                width: '100%',
-                margin: '0 auto',
-                gap: 8,
-                boxSizing: 'border-box'
-            }}
-        >
+        <Container>
             {data?.page?.contentBlocks?.map((contentBlock: any, i: number) => {
                 return renderContentBlocks(contentBlock, i, navigate);
             })}
-        </div>
+        </Container>
     );
 }

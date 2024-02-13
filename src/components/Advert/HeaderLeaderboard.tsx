@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useLocation } from "react-router-dom";
 
 import styled from '@emotion/styled';
 
@@ -20,6 +21,10 @@ const StyledAdvert = styled.div`
 `;
 
 export default function ({ advert }: { advert: any }) {
+    const location = useLocation();
+    const [slot, setSlot] = React.useState(null);
+    const [refreshInterval, setRefreshInterval] = React.useState<NodeJS.Timer|null>(null);
+
     React.useEffect(() => {
         googletag.cmd.push(function() {
             const sizeMapping = googletag
@@ -35,10 +40,15 @@ export default function ({ advert }: { advert: any }) {
                     return slot.getSlotId().getDomId() == advert.advertId;
                 })[0];
             if (!adUnit) {
-                const slot = googletag.defineSlot('/23061355960/' + advert.adUnit, [[320, 50], [728, 90]], advert.advertId);
-                slot.defineSizeMapping(sizeMapping);
-                slot.addService(googletag.pubads());
-                googletag.display(advert.advertId);
+                const newSlot = googletag.defineSlot('/23061355960/' + advert.adUnit, [[320, 50], [728, 90]], advert.advertId);
+                newSlot.defineSizeMapping(sizeMapping);
+                newSlot.addService(googletag.pubads());
+                setSlot(newSlot);
+
+                let newInterval = setInterval(function() {
+                    googletag.pubads().refresh([newSlot]);
+                }, 10 * 1000);
+                setRefreshInterval(newInterval);
             }
         });
 
@@ -46,8 +56,20 @@ export default function ({ advert }: { advert: any }) {
             googletag.cmd.push(function() {
                 googletag.destroySlots(['/23061355960/' + advert.adUnit]);
             });
+
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
         }
     }, []);
+
+    React.useEffect(() => {
+        if (slot) {
+            googletag.cmd.push(function() {
+                googletag.pubads().refresh([slot]);
+            });
+        }
+    }, [slot, location.pathname]);
 
     return (
         <AdvertContainer>

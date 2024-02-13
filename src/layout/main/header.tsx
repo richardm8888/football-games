@@ -37,12 +37,12 @@ const Logo = styled.img`
     }
 `;
 
-const StyledAppBar = styled(AppBar)`
-    height: 130px;
+const StyledAppBar = styled(AppBar)<{ isHome: boolean }>`
+    height: ${props => props.isHome ? '0' : '130'}px;
     box-shadow: none;
 
     @media (min-width: 728px) {
-        height: 170px;
+        height: ${props => props.isHome ? '0' : '170'}px;
     }
 `;
 
@@ -67,8 +67,10 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
         )
     }
     return (
-        <StyledAppBar color="transparent" position="static">
-            <HeaderLeaderboard advert={{ adUnit: 'difficulty-select', advertId: 'header-leaderboard' }} />
+        <StyledAppBar isHome={location.pathname == '/'} color="transparent" position="static">
+            {location.pathname !== '/' && (
+                <HeaderLeaderboard advert={{ adUnit: 'difficulty-select', advertId: 'header-leaderboard' }} />
+            )}
             <Toolbar sx={{ height: 70, justifyContent: 'space-between', padding: '0 10px' }}>
                 <IconButton
                     size="large"
@@ -80,12 +82,14 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Logo 
-                    onClick={() => navigate('/')} 
-                    src="/logo.jpg" 
-                    title="Football Connect" 
-                    alt="Football Connect"
-                />
+                {location.pathname !== '/' && (
+                    <Logo 
+                        onClick={() => navigate('/')} 
+                        src="/logo.jpg" 
+                        title="Football Connect" 
+                        alt="Football Connect"
+                    />
+                )}
                 <div style={{ display: 'flex', gap: '16px'}}>
                     {actionButton}
                 </div>

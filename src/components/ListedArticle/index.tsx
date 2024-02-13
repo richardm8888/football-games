@@ -11,7 +11,7 @@ export default function ({ article }: { article: any }) {
     const navigate = useNavigate();
 
     return (
-        <Card onClick={() => navigate(`/${article.category.slug}/${article.slug}`)}>
+        <Card onClick={() => navigate(`/${article.category.slug}/${article.slug}`)} style={{ width: '100%' }}>
             <CardActionArea sx={{ display: 'flex', justifyContent: 'flex-start' }}>
                 <CardMedia
                     component="img"
@@ -20,7 +20,7 @@ export default function ({ article }: { article: any }) {
                     alt={article.title}
                 />
                 <CardContent sx={{ display: 'flex', height: '100%', alignItems: 'center' }}>
-                    <Typography variant="h6" >{article.title}</Typography>
+                    <Typography variant="subtitle2" >{article.title}</Typography>
                 </CardContent>
             </CardActionArea>
         </Card>

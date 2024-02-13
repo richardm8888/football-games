@@ -4,14 +4,15 @@ import Advert from '../Advert';
 import Button from '@mui/material/Button';
 import FootballConnect from '../Game/FootballConnect';
 import styled from '@emotion/styled';
+import LatestArticles from '../LatestArticles';
 
-const Image = styled.img`
+const Image = styled.img<{ widthStyle: string }>`
     width: 100%;
     height: auto;
-    margin: 10px 0;
+    margin: ${props => props.widthStyle == 'responsive' ? '10px' : '0'} 0;
 
     @media (min-width: 768px) {
-        width: 40%;
+        width: ${props => props.widthStyle == 'responsive' ? '40%' : '100%'};
     }
 `;
 
@@ -41,7 +42,7 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
             return (
                 <div key={`content-block-${i}`}> 
                     {contentBlock.content.map((content: string, j: number) => (
-                        <div key={`content-block-${i}-${j}`}> 
+                        <div key={`content-block-${i}-${j}`} style={{ padding: '0 16px' }}> 
                             <Markdown >{content}</Markdown>
                         </div>
                     ))}
@@ -76,8 +77,11 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
                     key={'content-block-' + i}
                     src={contentBlock.image[0].url}
                     alt={contentBlock.image[0].fileName}
+                    widthStyle={contentBlock.width}
                 />
             );
+        case 'LatestArticleCarousel':
+            return <LatestArticles />;
     }
     
     return null;

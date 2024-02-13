@@ -47,6 +47,10 @@ export const getPage = gql`
                                     width
                                     height
                                 }
+                                ... on LatestArticleCarousel {
+                                    __typename
+                                    numberOfArticles
+                                }
                             }
                         }
                         ... on Button {
@@ -78,6 +82,10 @@ export const getPage = gql`
                             adUnit
                             width
                             height
+                        }
+                        ... on LatestArticleCarousel {
+                            __typename
+                            numberOfArticles
                         }
                     }
                 }
