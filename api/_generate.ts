@@ -5,32 +5,32 @@ const USER = process.env.NEO4J_USER || 'neo4j';
 const PASSWORD = process.env.NEO4J_PASSWORD || 'qwerty123';
 const driver = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD));
 
-async function getYesterdaysGame() {
+async function getYesterdaysGame(difficulty: string = 'easy') {
 
     let clubs, players = null;
 
     const { records: clubRecords } = await driver.executeQuery(
         `
-        MATCH (g:Game {date: date() - duration('P1D')})-[:CONTAINS_CLUB]-(c:Club)
+        MATCH (g:Game:${difficulty.toUpperCase()} WHERE g.date > date() - duration('P1D'))-[:CONTAINS_CLUB]-(c:Club)
         RETURN collect(c.clubId) as clubIds
         `,
         {}
     );
 
     if (clubRecords.length) {
-        clubs = clubRecords[0].get('clubIds');
+        clubs = clubRecords[0].get('clubIds').map((club: any) => club.low);
     } 
 
     const { records: playerRecords, summary, keys } = await driver.executeQuery(
         `
-        MATCH (g:Game {date: date() - duration('P1D')})-[:CONTAINS_PLAYER]-(p:Player)
+        MATCH (g:Game:${difficulty.toUpperCase()} WHERE g.date > date() - duration('P3D'))-[:CONTAINS_PLAYER]-(p:Player)
         RETURN collect(p.playerId) as playerIds
         `,
         {}
     );
 
     if (playerRecords.length) {
-        players = playerRecords[0].get('playerIds');
+        players = playerRecords[0].get('playerIds').map((player: any) => player.low);
     } 
 
     return { clubs, players };
@@ -81,9 +81,9 @@ export default async function handler(request: any): Promise<any[]> {
     if (cached) {
         return JSON.parse(cached);
     } else {
-        const ydayGame = await getYesterdaysGame();
-        excludedClubs.concat(ydayGame.clubs ?? []);
-        let excludedPlayers: any[] =ydayGame.players ?? [];
+        const ydayGame = await getYesterdaysGame(difficulty);
+        excludedClubs = excludedClubs.concat(ydayGame.clubs ?? []);
+        let excludedPlayers: any[] = ydayGame.players ?? [];
 
         let allSelectedPlayers: any = {};
         let game: any = {};
