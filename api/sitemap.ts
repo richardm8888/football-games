@@ -18,7 +18,7 @@ export default async function handler(
     const client = createClient();
     client.connect();
 
-    const { rows } = await client.query(`SELECT * FROM sitemap`);
+    const { rows } = await client.query(`SELECT loc, lastmod, priority FROM sitemap`);
     client.end();
 
     result.urlset.url = rows.map((row: any) => {
