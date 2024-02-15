@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client';
 import { ArticlePageLayout, ArticleContent } from './styles';
 import Categories from '../../components/Categories';
 import {Helmet} from "react-helmet";
+import Typography from '@mui/material/Typography';
 
 import { getArticles, getCategories, getLatest } from '../../queries/blog';
 import ListedArticle from '../../components/ListedArticle';
@@ -41,18 +42,28 @@ export default function ({ children }: { children?: React.ReactElement }) {
                 <title>{'Football Connect - ' + ucWords(params.category ?? '')}</title>
             </Helmet>
             <ArticleContent>
-                {params.category === 'blog' && latestData?.articles.map((article: any) => {
-                    return (
-                        <ListedArticle article={article} />
-                    );
-                })}
+                {(params.category === 'blog' || data?.articles.length == 0) && (
+                    <>
+                        <Typography variant="subtitle1" sx={{ width: '100%', textAlign: 'center' }}>Latest articles</Typography>
+                        {latestData?.articles.map((article: any) => {
+                            return (
+                                <ListedArticle article={article} />
+                            );
+                        })}
+                    </>
+                )}
 
                 
-                {params.category !== 'blog' && data?.articles.map((article: any) => {
-                    return (
-                        <ListedArticle article={article} />
-                    );
-                })}
+                {params.category !== 'blog' && data?.articles.length > 0 && (
+                    <>
+                        <Typography variant="subtitle1" sx={{ width: '100%', textAlign: 'center' }}>Articles for {ucWords(params.category ?? '')}</Typography>
+                        {data?.articles.map((article: any) => {
+                            return (
+                                <ListedArticle article={article} />
+                            );
+                        })}
+                    </>
+                )}
             </ArticleContent>
 
             <Categories categorySlug={params.category == 'blog' ? null : params.category} />         

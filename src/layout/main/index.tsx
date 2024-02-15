@@ -17,6 +17,8 @@ const ContentContainer = styled('div', {
     min-height: calc(100vh - ${props => props.$isHome ? '90' : '210'}px);
     padding: 0;
     width: 100%;
+    max-width: 970px;
+    margin: 0 auto;
 
     @media (min-width: 728px) {
         min-height: calc(100vh - ${props => props.$isHome ? '90' : '250'}px);

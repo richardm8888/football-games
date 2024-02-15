@@ -10,10 +10,6 @@ const Image = styled.img<{ widthStyle: string }>`
     width: 100%;
     height: auto;
     margin: ${props => props.widthStyle == 'responsive' ? '10px' : '0'} 0;
-
-    @media (min-width: 768px) {
-        width: ${props => props.widthStyle == 'responsive' ? '40%' : '100%'};
-    }
 `;
 
 const ContentBlock = styled.div<{ contentBlocks: any, alignment: string }>`
@@ -27,11 +23,7 @@ const ContentBlock = styled.div<{ contentBlocks: any, alignment: string }>`
     gap: 16px;
     box-sizing: border-box;
     text-align: ${props => props.alignment == 'flex-start' ? 'left' : props.alignment == 'flex-end' ? 'right' : 'center'};
-
-
-    @media (max-width: 768px) {
-        flex-wrap: wrap;
-    }
+    flex-wrap: wrap;
 `;
 
 export function renderContentBlock(contentBlock: any, i: number, navigate: any) {

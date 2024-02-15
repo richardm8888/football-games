@@ -46,6 +46,7 @@ export const getPage = gql`
                                     adUnit
                                     width
                                     height
+                                    size
                                 }
                                 ... on LatestArticleCarousel {
                                     __typename
@@ -82,6 +83,7 @@ export const getPage = gql`
                             adUnit
                             width
                             height
+                            size
                         }
                         ... on LatestArticleCarousel {
                             __typename

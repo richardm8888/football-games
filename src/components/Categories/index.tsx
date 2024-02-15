@@ -15,16 +15,18 @@ export const Categories = styled('div')`
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 16px;
+    padding: 16px 0;
     align-items: flex-end;
-    flex-grow: 1;
+    width: 200px;
+    box-sizing: border-box;
 
     @media (max-width: 768px) {
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: center;
         align-items: flex-start;
         flex-wrap: wrap;
         width: 100%;
+        padding: 16px;
     }
     @media (max-width: 450px) {
         justify-content: center;
@@ -51,6 +53,7 @@ export default function ({ categorySlug }: { categorySlug?: string|null }) {
 
     return (
         <Categories>
+            <Typography variant="subtitle1" sx={{ textAlign: 'center', width: '100%' }}>Explore more topics</Typography>
             {catData?.categories.map((subCategory: any) => {
                 const width = 200;
                 const height = 115;

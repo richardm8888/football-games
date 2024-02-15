@@ -13,7 +13,8 @@ export const ArticleContent = styled('div')`
     flex-direction: column;
     gap: 16px;
     padding: 16px;
-    width: calc(100% - 300px);
+    width: calc(100% - 240px);
+    box-sizing: border-box;
 
     @media (max-width: 768px) {
         width: 100%;
