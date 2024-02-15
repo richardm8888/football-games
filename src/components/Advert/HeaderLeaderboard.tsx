@@ -47,7 +47,7 @@ export default function ({ advert }: { advert: any }) {
 
                 let newInterval = setInterval(function() {
                     googletag.pubads().refresh([newSlot]);
-                }, 10 * 1000);
+                }, 30 * 1000);
                 setRefreshInterval(newInterval);
             }
         });
