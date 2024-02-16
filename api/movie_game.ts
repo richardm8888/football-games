@@ -1,4 +1,4 @@
-import getGameData from "./_generate_football.js";
+import getGameData from "./_generate_movie.js";
 
 export default async function handler(
   request: any,

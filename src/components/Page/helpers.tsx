@@ -3,6 +3,7 @@ import Markdown from 'react-markdown'
 import Advert from '../Advert';
 import Button from '@mui/material/Button';
 import FootballConnect from '../Game/FootballConnect';
+import MovieConnect from '../Game/MovieConnect';
 import styled from '@emotion/styled';
 import LatestArticles from '../LatestArticles';
 
@@ -58,6 +59,10 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
                 case 'FootballConnect':
                     return (
                         <FootballConnect key={'content-block-' + i} difficulty={contentBlock.difficulty} />
+                    );
+                case 'MovieConnect':
+                    return (
+                        <MovieConnect key={'content-block-' + i} difficulty={contentBlock.difficulty} />
                     );
             }
             break;

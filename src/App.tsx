@@ -14,6 +14,7 @@ import Article from './pages/article';
 import Articles from './pages/articles';
 import Difficulty from './pages/difficulty';
 import Game from './pages/game';
+import Movie from './pages/movie';
 import { getScreenName } from './routing';
 
 export default function () {
@@ -55,6 +56,7 @@ export default function () {
               }
             >
               <Route path="/" element={<Home />} />
+              <Route path="/movie" element={<Movie />} />
               <Route path="/difficulty" element={<Difficulty />} />
               <Route path="/difficulty/:difficulty" element={<Game />} />
               <Route path="/:category/:slug" element={<Article />} />
