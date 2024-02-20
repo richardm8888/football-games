@@ -4,5 +4,5 @@ import Page from '../../components/Page';
 
 export default function () {
     const params = useParams();
-    return <Page slug={'difficulty/' + params?.difficulty} />;
+    return <Page slug={'football/' + params?.difficulty} />;
 }

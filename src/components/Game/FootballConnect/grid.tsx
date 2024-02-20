@@ -247,8 +247,8 @@ export default function ({ difficulty, children }: { difficulty: string, childre
                 boxSizing: 'border-box'
             }}
         >
-            <SuccessModal difficulty={difficulty} open={successOpen} setOpen={setSuccessOpen} gameData={GameData} guesses={guesses} />
-            <FailModal difficulty={difficulty} open={failureOpen} setOpen={setFailureOpen} gameData={GameData} guesses={guesses} />
+            <SuccessModal gameType={'football'} difficulty={difficulty} open={successOpen} setOpen={setSuccessOpen} gameData={GameData} guesses={guesses} />
+            <FailModal gameType={'football'} difficulty={difficulty} open={failureOpen} setOpen={setFailureOpen} gameData={GameData} guesses={guesses} />
             <RulesModal open={rulesOpen} setOpen={setRulesOpen} />
             <Container 
                 sx={{ 

@@ -11,7 +11,7 @@ import { generateEmojiGrid } from '../../utils/emoji';
 import { shareStatus } from '../../utils/share';
 import Typography from '@mui/material/Typography';
 
-export default function ({ difficulty, open, setOpen, gameData, guesses }: { difficulty: string, open: boolean, setOpen: (open: boolean) => void, gameData: any, guesses: any }) {
+export default function ({ gameType, difficulty, open, setOpen, gameData, guesses }: { gameType: string, difficulty: string, open: boolean, setOpen: (open: boolean) => void, gameData: any, guesses: any }) {
     const navigate = useNavigate();
     const [message, setMessage] = React.useState<string>('');
 
@@ -26,8 +26,8 @@ export default function ({ difficulty, open, setOpen, gameData, guesses }: { dif
     return (
         <Dialog open={open} onClose={() => setOpen(false)}>
             <DialogTitle>
-                <Typography variant="subtitle1">{`You have successfully completed todays ${difficulty} game!`}</Typography>
-                <Typography variant="subtitle2">{`Next ${difficulty} game is in ${hours} hour${hours > 1 ? 's' : ''} and ${mins} minute${mins > 1 ? 's' : ''}.`}</Typography>
+                <Typography variant="subtitle1">{`You have successfully completed todays ${difficulty} ${gameType} game!`}</Typography>
+                <Typography variant="subtitle2">{`Next ${difficulty} ${gameType} game is in ${hours} hour${hours > 1 ? 's' : ''} and ${mins} minute${mins > 1 ? 's' : ''}.`}</Typography>
             </DialogTitle>
             <DialogContent>
                 {generateEmojiGrid(gameData, guesses).map((row: any, i: number) => {
@@ -35,7 +35,7 @@ export default function ({ difficulty, open, setOpen, gameData, guesses }: { dif
                 })}
             </DialogContent>
             <DialogActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="text" onClick={() => navigate('/difficulty')}>Change difficulty</Button>
+                <Button variant="text" onClick={() => navigate(`/${gameType}`)}>Change difficulty</Button>
                 <Button 
                     variant="contained" 
                     startIcon={<ShareIcon />}

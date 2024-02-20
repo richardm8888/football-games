@@ -28,5 +28,11 @@
         ]
       }
     ],
+    "redirects": [
+      { "source": "/difficulty", "destination": "/football", "permanent": true },
+      { "source": "/difficulty/easy", "destination": "/football/easy", "permanent": true },
+      { "source": "/difficulty/medium", "destination": "/football/medium", "permanent": true },
+      { "source": "/difficulty/hard", "destination": "/football/hard", "permanent": true }
+    ],
     "devCommand": "npm start"
 }

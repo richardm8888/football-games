@@ -3,7 +3,9 @@ import {
   Routes,
   Route,
   Outlet,
-  useLocation
+  useLocation,
+  useParams,
+  Navigate
 } from "react-router-dom";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import StyledEngineProvider from '@mui/material/StyledEngineProvider';
@@ -59,8 +61,8 @@ export default function () {
               <Route path="/" element={<Home />} />
               <Route path="/movie" element={<Movie />} />
               <Route path="/movie/:difficulty" element={<MovieGame />} />
-              <Route path="/difficulty" element={<Difficulty />} />
-              <Route path="/difficulty/:difficulty" element={<Game />} />
+              <Route path="/football" element={<Difficulty />} />
+              <Route path="/football/:difficulty" element={<Game />} />
               <Route path="/:category/:slug" element={<Article />} />
               <Route path="/:category" element={<Articles />} />
             </Route>
