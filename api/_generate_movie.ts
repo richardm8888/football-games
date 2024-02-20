@@ -11,7 +11,7 @@ async function getYesterdaysGame(difficulty: string = 'easy') {
 
     const { records: filmRecords } = await driver.executeQuery(
         `
-        MATCH (g:MovieGame:${difficulty.toUpperCase()} WHERE g.date > date() - duration('P1D'))-[:CONTAINS_FILM]-(f:Film)
+        MATCH (g:MovieGame:${difficulty.toUpperCase()} WHERE g.date > date() - duration('P3D'))-[:CONTAINS_FILM]-(f:Film)
         RETURN collect(f.filmId) as filmIds
         `,
         {}
@@ -23,7 +23,7 @@ async function getYesterdaysGame(difficulty: string = 'easy') {
 
     const { records: actorRecords, summary, keys } = await driver.executeQuery(
         `
-        MATCH (g:MovieGame:${difficulty.toUpperCase()} WHERE g.date > date() - duration('P3D'))-[:CONTAINS_ACTOR]-(a:Actor)
+        MATCH (g:MovieGame:${difficulty.toUpperCase()} WHERE g.date > date() - duration('P1D'))-[:CONTAINS_ACTOR]-(a:Actor)
         RETURN collect(a.actorId) as actorIds
         `,
         {}
@@ -87,9 +87,26 @@ export default async function handler(request: any): Promise<any[]> {
 
         let allSelectedActors: any = {};
         let game: any = {};
-        let films: any[] = await getFilms(4, excludedFilms);
+        let films1: any[] = [];
+        let films2: any[] = [];
+        let films3: any[] = [];
+        switch (difficulty) {
+            case 'easy':
+                films1 = await getFilms(4, excludedFilms, 7, 10);
+                break;
+            case 'medium':
+                films1 = await getFilms(2, excludedFilms, 8, 10);
+                films2 = await getFilms(1, excludedFilms, 6.5, 10);
+                films3 = await getFilms(1, excludedFilms, 5, 8);
+                break;
+            case 'hard':
+                films1 = await getFilms(1, excludedFilms, 8, 10);
+                films2 = await getFilms(1, excludedFilms, 6.5);
+                films3 = await getFilms(2, excludedFilms, 5, 8);
+                break;
+        }
 
-        console.log(films);
+        const films = films1.concat(films2).concat(films3);
 
         let allFilmIds: string[] = films.map((film: any) => film.filmId);
         let filmIndex: number = 1;
@@ -101,7 +118,6 @@ export default async function handler(request: any): Promise<any[]> {
                 let allExcludedActors = Object.keys(allSelectedActors).concat(excludedActors);
                 let excludeFilms: any[] = [];
                 const actors = await lookupActorByFilm(filmId, allExcludedActors, excludeFilms);
-                console.log(actors);
                 if (!actors.length) {
                     request.query['excludeFilms'] = [filmId];
                     return handler(request);
@@ -109,7 +125,6 @@ export default async function handler(request: any): Promise<any[]> {
                 const actor = actors[0];
                 allSelectedActors[actor.get('a').properties.actorId] = actor.get('films').map((film: any) => film.properties.filmId);
                 game[filmName].push(actor.get('a').properties.name);
-                console.log(game[filmName]);
             }
             filmIndex++;
         }
@@ -166,14 +181,14 @@ export default async function handler(request: any): Promise<any[]> {
 }
 
 
-async function getFilms(numFilms: number, excludeFilms: string[] = []) {
+async function getFilms(numFilms: number, excludeFilms: string[] = [], minRating: number = 7, maxRating: number = 10) {
     const { records, summary, keys } = await driver.executeQuery(
         `
         MATCH (f:Film WHERE NOT f.filmId IN $excludeFilms)-[:ACTED_IN]-(a:Actor)
-        WITH f.filmId as filmId, f.name as filmName, count(a) as numActors WHERE numActors > 3 AND f.name IN ['Saving Private Ryan', 'The Matrix', 'Forrest Gump', 'Jurassic Park']
+        WITH f.filmId as filmId, f.name as filmName, f.rating as filmRating, count(a) as numActors WHERE numActors > 3 AND filmRating >= $minRating AND filmRating <= $maxRating
         WITH filmId, filmName, rand() as r ORDER BY r LIMIT toInteger($numFilms)
         RETURN filmId, filmName`,
-        { numFilms, excludeFilms }
+        { numFilms, excludeFilms, minRating, maxRating }
     );
 
     let films: any[] = [];
