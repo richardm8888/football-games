@@ -88,6 +88,17 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                 </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton onClick={() => {
+                        navigate('/movie');
+                        toggleDrawer();
+                    }}>
+                        <ListItemIcon>
+                            <PlayCircleIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Play Movies" />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton onClick={() => {
                         navigate('/about/rules');
                         toggleDrawer();
                     }}>
