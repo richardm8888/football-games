@@ -13,6 +13,7 @@ import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import TheatersIcon from '@mui/icons-material/Theaters';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import ArticleIcon from '@mui/icons-material/Article';
 import PolicyIcon from '@mui/icons-material/Policy';
@@ -92,7 +93,7 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                         toggleDrawer();
                     }}>
                         <ListItemIcon>
-                            <PlayCircleIcon />
+                            <TheatersIcon />
                         </ListItemIcon>
                         <ListItemText primary="Play Movies" />
                     </ListItemButton>

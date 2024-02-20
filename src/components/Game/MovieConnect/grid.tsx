@@ -3,7 +3,6 @@ import { animated, useSpring } from '@react-spring/web'
 
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import TheatersIcon from '@mui/icons-material/Theaters';
-import MovieIcon from '@mui/icons-material/Movie';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import UndoIcon from '@mui/icons-material/Undo';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
