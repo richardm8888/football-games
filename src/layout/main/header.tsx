@@ -67,6 +67,21 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
                 </StyledSelect>        
         )
     }
+    if (location.pathname.split('/').length == 3 && location.pathname.split('/')[1] == 'movie'){
+        actionButton = (
+                <StyledSelect
+                    value={location.pathname.split('/')[2]}
+                    label="Difficulty"
+                    onChange={(event: SelectChangeEvent<unknown>) => {
+                        navigate('/movie/' + event?.target?.value);
+                    }}
+                >   
+                    <MenuItem value={'easy'} sx={{ backgroundColor: 'white',  }}>Easy</MenuItem>
+                    <MenuItem value={'medium'}>Medium</MenuItem>
+                    <MenuItem value={'hard'}>Hard</MenuItem>
+                </StyledSelect>        
+        )
+    }
     return (
         <StyledAppBar $isHome={location.pathname == '/'} color="transparent" position="static">
             {location.pathname !== '/' && (
