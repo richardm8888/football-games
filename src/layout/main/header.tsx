@@ -58,7 +58,7 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
                     value={location.pathname.split('/')[2]}
                     label="Difficulty"
                     onChange={(event: SelectChangeEvent<unknown>) => {
-                        navigate('/difficulty/' + event?.target?.value);
+                        navigate('/football/' + event?.target?.value);
                     }}
                 >   
                     <MenuItem value={'easy'} sx={{ backgroundColor: 'white',  }}>Easy</MenuItem>

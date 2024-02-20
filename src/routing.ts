@@ -2,14 +2,22 @@ export function getScreenName(path: string) {
     switch (path) {
         case '/':
             return 'Home';
-        case '/difficulty':
-            return 'Difficulty';
-        case '/difficulty/easy':
-            return 'Easy';
-        case '/difficulty/medium':
-            return 'Medium';
-        case '/difficulty/hard':
-            return 'Hard';
+        case '/football':
+            return 'Football Game Difficulty';
+        case '/football/easy':
+            return 'Football Game Easy';
+        case '/football/medium':
+            return 'Football Game Medium';
+        case '/football/hard':
+            return 'Football Game Hard';
+        case '/movie':
+            return 'Movie Game Difficulty';
+        case '/movie/easy':
+            return 'Movie Game Easy';
+        case '/movie/medium':
+            return 'Movie Game Medium';
+        case '/movie/hard':
+            return 'Movie Game Hard';
         case '/about/rules':
             return 'Rules';
         case '/about/about-us':

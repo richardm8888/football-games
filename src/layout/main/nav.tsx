@@ -77,7 +77,7 @@ export default function ({ open, toggleDrawer }: { open: boolean, toggleDrawer: 
                 </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton onClick={() => {
-                        navigate('/difficulty');
+                        navigate('/football');
                         toggleDrawer();
                     }}>
                         <ListItemIcon>
