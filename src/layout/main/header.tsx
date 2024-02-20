@@ -52,7 +52,7 @@ export default function ({ toggleDrawer }: { toggleDrawer: () => void}) {
     const navigate = useNavigate();
 
     let actionButton = null;
-    if (location.pathname.split('/').length == 3 && location.pathname.split('/')[1] == 'difficulty'){
+    if (location.pathname.split('/').length == 3 && location.pathname.split('/')[1] == 'football'){
         actionButton = (
                 <StyledSelect
                     value={location.pathname.split('/')[2]}
