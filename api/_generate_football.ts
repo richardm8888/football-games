@@ -212,11 +212,11 @@ async function getClubs(numClubs: number, includeClubs: number[] = [], excludeCl
 async function lookupPlayerByClub(clubId: number, excludedPlayers: number[], excludedClubs: number[] = [], minClubs: number = 1, maxClubs: number = 10, minApps: number = 50): Promise<any[]> {   
     const { records, summary, keys } = await driver.executeQuery(
         `
-            MATCH (p:Player WHERE NOT p.playerId IN $excludedPlayers)-[pf:PLAYED_FOR]-(ec:Club)
-            WITH p, sum(pf.count) as totalPlayed WHERE totalPlayed > $minApps
-            MATCH (p)-[pf:PLAYED_FOR WHERE pf.count > 30]-(c:Club {clubId: $clubId})
+            MATCH (p:Player WHERE NOT p.playerId IN $excludedPlayers)-[pf:PLAYED_FOR_TOTAL]-(ec:Club)
+            WITH p, sum(pf.apps) as totalPlayed WHERE totalPlayed > $minApps
+            MATCH (p)-[pf:PLAYED_FOR_TOTAL WHERE pf.apps > 30]-(c:Club {clubId: $clubId})
             WITH DISTINCT p, c
-            MATCH (p)-[:PLAYED_FOR]-(c2:Club WHERE NOT c2.clubId IN $excludedClubs)
+            MATCH (p)-[:PLAYED_FOR_TOTAL]-(c2:Club WHERE NOT c2.clubId IN $excludedClubs)
             WITH p, collect(DISTINCT c2) as clubs
             WITH p, clubs, size(clubs) as n_clubs WHERE n_clubs >= $minClubs AND n_clubs <= $maxClubs
             RETURN p, clubs, n_clubs, rand() as r ORDER BY r LIMIT 1
@@ -262,7 +262,8 @@ function getBigEnglishClubs() {
         31, // Liverpool
         29, // Everton
         11, // Arsenal
-        // 1003, // Leicester
+        1003, // Leicester
+        399, // Leeds
     ];
 }
 
@@ -277,14 +278,13 @@ function getOtherEnglishClubs() {
         405, // Villa
         1132, // Burnley
         1148, // Brentford
-        // 703, // Forest
-        // 350, // Sheff Utd
+        703, // Forest
+        350, // Sheff Utd
         // 1031, // Luton
         // 984, // West Brom
-        // 399, // Leeds
-        // 289, // Sunderland
-        // 1123, // Norwich
-        // 1010, // Watford
+        289, // Sunderland
+        1123, // Norwich
+        1010, // Watford
     ];
 }
 
