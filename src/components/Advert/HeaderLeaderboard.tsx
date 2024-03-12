@@ -47,7 +47,7 @@ export default function ({ advert }: { advert: any }) {
 
                 let newInterval = setInterval(function() {
                     googletag.pubads().refresh([newSlot]);
-                }, 30 * 1000);
+                }, 45 * 1000);
                 setRefreshInterval(newInterval);
             }
         });
@@ -69,7 +69,7 @@ export default function ({ advert }: { advert: any }) {
                 googletag.pubads().refresh([slot]);
             });
         }
-    }, [slot, location.pathname]);
+    }, [slot]);
 
     return (
         <AdvertContainer>
