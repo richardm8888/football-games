@@ -72,7 +72,7 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
                 <Advert key={'content-block-' + i} advert={contentBlock} />
             );
         case 'Image':
-            return (
+            const img = (
                 <Image 
                     key={'content-block-' + i}
                     src={contentBlock.image[0].url}
@@ -80,6 +80,13 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
                     widthStyle={contentBlock.widthStyle}
                 />
             );
+
+            if (contentBlock.url) {
+                return (
+                    <a href={contentBlock.url} target='_blank'>{img}</a>
+                );
+            }
+            return img;
         case 'LatestArticleCarousel':
             return <LatestArticles />;
     }
