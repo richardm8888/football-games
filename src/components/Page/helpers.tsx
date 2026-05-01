@@ -1,5 +1,6 @@
 import * as React from 'react';
-import Markdown from 'react-markdown'
+import Markdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import Advert from '../Advert';
 import Button from '@mui/material/Button';
 import FootballConnect from '../Game/FootballConnect';
@@ -36,7 +37,7 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
                 <div key={`content-block-${i}`}> 
                     {contentBlock.content.map((content: string, j: number) => (
                         <div key={`content-block-${i}-${j}`} style={{ padding: '0 16px' }}> 
-                            <Markdown >{content}</Markdown>
+                            <Markdown rehypePlugins={[rehypeRaw]}>{content}</Markdown>
                         </div>
                     ))}
                 </div>
@@ -71,7 +72,7 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
                 <Advert key={'content-block-' + i} advert={contentBlock} />
             );
         case 'Image':
-            return (
+            const img = (
                 <Image 
                     key={'content-block-' + i}
                     src={contentBlock.image[0].url}
@@ -79,6 +80,13 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
                     widthStyle={contentBlock.widthStyle}
                 />
             );
+
+            if (contentBlock.externalurl) {
+                return (
+                    <a href={contentBlock.externalurl} target='_blank'>{img}</a>
+                );
+            }
+            return img;
         case 'LatestArticleCarousel':
             return <LatestArticles />;
     }
