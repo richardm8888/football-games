@@ -39,7 +39,7 @@ export const getPage = gql`
                                         fileName
                                     }
                                     widthStyle
-                                    url
+                                    externalurl
                                 }
                                 ... on Advert {
                                     __typename
@@ -77,7 +77,7 @@ export const getPage = gql`
                                 fileName
                             }
                             widthStyle
-                            url
+                            externalurl
                         }
                         ... on Advert {
                             __typename

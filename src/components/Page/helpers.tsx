@@ -81,9 +81,9 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
                 />
             );
 
-            if (contentBlock.url) {
+            if (contentBlock.externalurl) {
                 return (
-                    <a href={contentBlock.url} target='_blank'>{img}</a>
+                    <a href={contentBlock.externalurl} target='_blank'>{img}</a>
                 );
             }
             return img;
