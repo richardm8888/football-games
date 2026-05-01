@@ -1,5 +1,6 @@
 import * as React from 'react';
-import Markdown from 'react-markdown'
+import Markdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import Advert from '../Advert';
 import Button from '@mui/material/Button';
 import FootballConnect from '../Game/FootballConnect';
@@ -36,7 +37,7 @@ export function renderContentBlock(contentBlock: any, i: number, navigate: any) 
                 <div key={`content-block-${i}`}> 
                     {contentBlock.content.map((content: string, j: number) => (
                         <div key={`content-block-${i}-${j}`} style={{ padding: '0 16px' }}> 
-                            <Markdown >{content}</Markdown>
+                            <Markdown rehypePlugins={[rehypeRaw]}>{content}</Markdown>
                         </div>
                     ))}
                 </div>
